@@ -22,7 +22,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 ### Phase 1 — Linux & server foundations
 | # | Lab | Status |
 |---|---|---|
-| 01 | [VPS hardening](labs/01-vps-hardening/) | ⬜ |
+| 01 | [VPS hardening](labs/01-vps-hardening/) | 🟨 |
 | 02 | [Nginx, SSL & reverse proxy](labs/02-nginx-ssl-reverse-proxy/) | ⬜ |
 | 03 | [Automated backup & restore](labs/03-automated-backup/) | ⬜ |
 
