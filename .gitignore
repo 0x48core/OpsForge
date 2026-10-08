@@ -37,5 +37,12 @@ bin/
 .vscode/
 *.swp
 
+# Traefik local certs and dashboard users
+stacks/traefik/certs/*
+!stacks/traefik/certs/.gitkeep
+stacks/traefik/secrets/*
+!stacks/traefik/secrets/.gitkeep
+stacks/traefik/dynamic/tls.yml
+
 # Lab scratch space
 labs/**/scratch/

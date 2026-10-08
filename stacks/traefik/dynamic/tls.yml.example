@@ -1,0 +1,10 @@
+# Local certificate from mkcert (lab 05, step 5).
+# Copy to tls.yml only AFTER creating certs/local.pem and certs/local-key.pem:
+# if the files are missing, Traefik fails to build the certificate store.
+# Without tls.yml, Traefik serves its own self-signed certificate.
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/local.pem
+        keyFile: /etc/traefik/certs/local-key.pem
