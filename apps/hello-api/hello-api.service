@@ -1,0 +1,20 @@
+[Unit]
+Description=hello-api (OpsForge sample app)
+After=network.target
+
+[Service]
+User=hello
+Group=hello
+Environment=HOST=127.0.0.1 PORT=8000
+ExecStart=/opt/hello-api/hello-api
+Restart=on-failure
+RestartSec=2
+
+# Sandboxing: the app needs no write access and no privileges.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -28,6 +28,9 @@ crash.log
 *.dump
 *.tar.gz
 
+# Build output
+bin/
+
 # OS / editors
 .DS_Store
 .idea/

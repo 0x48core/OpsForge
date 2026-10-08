@@ -2,12 +2,21 @@
 
 ## Lab workflow
 
+Each lab has two files:
+
+| File | Purpose | When |
+|---|---|---|
+| `knowledge.md` | Concepts, terms, and questions: the *why* and *how it works* | **Before** practicing |
+| `README.md` | Goal, "Done when", steps, what broke, lessons: the *doing* | During and after |
+
 1. Copy `labs/_template/` to `labs/NN-short-name/` (or fill in the existing stub).
 2. Work on a branch: `lab/NN-short-name`.
-3. Write notes **while** doing the lab, not after — commands, errors, fixes.
-4. Anything reusable goes into an infrastructure folder (see below); the lab README links to it.
-5. A lab is ✅ only when every "Done when" item is checked. Update the roadmap in the root README.
-6. Merge to `main`. Tag milestones if useful (`phase-1-done`).
+3. **Study:** read `knowledge.md` and add your own notes. You're ready when you can answer "Before you start" without looking.
+4. **Practice:** follow `README.md`. Write notes **while** doing the lab, not after: commands, errors, fixes.
+5. Anything reusable goes into an infrastructure folder (see below); the lab README links to it.
+6. **Review:** answer "After the lab, check yourself" in `knowledge.md`, then fill in "Lessons learned".
+7. A lab is ✅ only when every "Done when" item is checked. Update the roadmap in the root README.
+8. Merge to `main`. Tag milestones if useful (`phase-1-done`).
 
 ## Where code lives
 
