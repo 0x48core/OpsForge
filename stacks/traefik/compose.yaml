@@ -1,0 +1,32 @@
+# Traefik: the single entry point for every web service (lab 05).
+# Prerequisite: docker network create proxy
+# Usage: docker compose up -d
+name: traefik
+
+services:
+  traefik:
+    image: traefik:v3.6
+    ports:
+      # Only Traefik is published. On a VPS these become "80:80" and "443:443".
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+    volumes:
+      # Read-only, but still powerful: the Docker socket is root-equivalent.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - ./certs:/etc/traefik/certs:ro
+      - ./secrets:/etc/traefik/secrets:ro
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dashboard.rule=Host(`traefik.opsforge.localhost`)
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.middlewares=dashboard-auth@file
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

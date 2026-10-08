@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    # Users file in htpasswd format, created locally and git-ignored:
+    #   htpasswd -nB admin > secrets/dashboard-users
+    dashboard-auth:
+      basicAuth:
+        usersFile: /etc/traefik/secrets/dashboard-users
