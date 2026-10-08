@@ -1,3 +1,3 @@
 # stacks
 
-Docker Compose stacks, one folder per stack (`stacks/<name>/compose.yaml` + `.env.example`). First ones arrive in labs 05–06.
+Docker Compose stacks, one folder per stack (`stacks/<name>/compose.yaml` + `.env.example`). First one: [hello-api](hello-api/) (lab 04).

@@ -29,7 +29,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 ### Phase 2 — Containers
 | # | Lab | Status |
 |---|---|---|
-| 04 | [Dockerize an app](labs/04-dockerize-app/) | ⬜ |
+| 04 | [Dockerize an app](labs/04-dockerize-app/) | 🟨 |
 | 05 | [Multi-service reverse proxy](labs/05-multi-service-proxy/) | ⬜ |
 | 06 | [Self-hosted tools](labs/06-self-hosted-tools/) | ⬜ |
 
