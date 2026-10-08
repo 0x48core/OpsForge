@@ -4,6 +4,8 @@
 - **Status:** 🟨 in progress
 - **Started / finished:** YYYY-MM-DD / —
 
+> 📖 **Learn first:** read [knowledge.md](knowledge.md) before starting the steps below.
+
 ## Goal
 
 Lock down a fresh VPS before running anything on it.

@@ -4,6 +4,8 @@
 - **Status:** ⬜ todo
 - **Started / finished:** YYYY-MM-DD / YYYY-MM-DD
 
+> 📖 **Learn first:** read [knowledge.md](knowledge.md) before starting the steps below.
+
 ## Goal
 
 One or two sentences: what this lab builds and why it matters.

@@ -10,7 +10,7 @@ OpsForge has two layers:
 
 | Layer | Where | What it is |
 |---|---|---|
-| **Journal** | [`labs/`](labs/) | One folder per lab: goal, steps I took, what broke, what I learned. Written as I go. |
+| **Journal** | [`labs/`](labs/) | One folder per lab: `knowledge.md` (concepts to learn first) and `README.md` (goal, steps, what broke, what I learned). |
 | **Infrastructure** | `ansible/`, `terraform/`, `stacks/`, `k8s/`, `apps/`, `scripts/` | The real, reusable code that runs my server. Labs *produce* this code; later labs *replace* earlier manual work with it. |
 
 Rule of thumb: if I'd want to run it again next month, it belongs in an infrastructure folder, and the lab links to it. See [docs/conventions.md](docs/conventions.md).
@@ -23,7 +23,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 | # | Lab | Status |
 |---|---|---|
 | 01 | [VPS hardening](labs/01-vps-hardening/) | 🟨 |
-| 02 | [Nginx, SSL & reverse proxy](labs/02-nginx-ssl-reverse-proxy/) | ⬜ |
+| 02 | [Nginx, SSL & reverse proxy](labs/02-nginx-ssl-reverse-proxy/) | 🟨 |
 | 03 | [Automated backup & restore](labs/03-automated-backup/) | ⬜ |
 
 ### Phase 2 — Containers
@@ -58,7 +58,7 @@ New labs get the next number (13, 14, …) and a new phase heading if needed —
 
 ```
 OpsForge/
-├── labs/            # learning journal, one folder per lab (start from labs/_template)
+├── labs/            # one folder per lab: knowledge.md (learn) + README.md (practice)
 ├── apps/            # sample applications deployed during the labs
 ├── stacks/          # Docker Compose stacks (proxy, self-hosted tools, monitoring)
 ├── scripts/         # standalone shell scripts (backup, helpers)
