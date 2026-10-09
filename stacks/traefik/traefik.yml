@@ -14,6 +14,8 @@ entryPoints:
     address: ":443"
     http:
       tls: {}   # every router on this entry point uses TLS
+  metrics:
+    address: ":8082"   # Prometheus metrics; not published, scraped over the proxy network
 
 providers:
   docker:
@@ -30,3 +32,10 @@ log:
   level: INFO
 
 accessLog: {}
+
+# Request rate, errors, and latency per router and service (lab 11).
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addRoutersLabels: true
+    addServicesLabels: true

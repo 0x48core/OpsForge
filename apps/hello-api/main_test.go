@@ -82,3 +82,27 @@ func TestHealthWhileDraining(t *testing.T) {
 		t.Errorf("GET / while draining = %d, want 200", rec.Code)
 	}
 }
+
+func TestMetrics(t *testing.T) {
+	do(t, "GET", "/health", nil)
+	do(t, "GET", "/no/such/page", nil)
+
+	req := httptest.NewRequest("GET", "/metrics", nil)
+	rec := httptest.NewRecorder()
+	newMux(&store{}).ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("GET /metrics = %d, want 200", rec.Code)
+	}
+	body := rec.Body.String()
+	for _, want := range []string{
+		`http_requests_total{code="200",method="GET",route="GET /health"}`,
+		`http_requests_total{code="404",method="GET",route="unmatched"}`, // raw path never becomes a label
+		`http_request_duration_seconds_bucket{method="GET",route="GET /health"`,
+		`hello_api_visits_recorded_total 0`,
+		`go_goroutines`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("/metrics is missing %s", want)
+		}
+	}
+}

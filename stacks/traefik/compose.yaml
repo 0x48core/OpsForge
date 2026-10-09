@@ -25,6 +25,10 @@ services:
       - traefik.http.routers.dashboard.entrypoints=websecure
       - traefik.http.routers.dashboard.service=api@internal
       - traefik.http.routers.dashboard.middlewares=dashboard-auth@file
+      # Scraped by Prometheus (lab 11)
+      - prometheus.scrape=true
+      - prometheus.port=8082
+      - prometheus.job=traefik
     restart: unless-stopped
 
 networks:

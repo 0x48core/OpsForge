@@ -9,6 +9,7 @@ A tiny JSON HTTP app used as the deploy target across OpsForge labs. Written in 
 | `GET /ready` | readiness: status of Postgres and Redis; `503` if a configured one is unreachable |
 | `GET /visits` | visit count from Redis and total rows from Postgres |
 | `POST /visits` | record a visit in both (needs Postgres and Redis) |
+| `GET /metrics` | Prometheus metrics: `http_requests_total`, `http_request_duration_seconds`, `hello_api_visits_recorded_total`, Go runtime |
 
 It shuts down gracefully on `SIGTERM`, so in-flight requests finish when systemd or Docker stops it.
 
@@ -51,3 +52,5 @@ To run with Postgres and Redis, use the Compose stack in [stacks/hello-api](../.
 - [Lab 04](../../labs/04-dockerize-app/): multi-stage [Dockerfile](Dockerfile) (distroless, non-root, ~22 MB) and a Compose stack
 - [Lab 05](../../labs/05-multi-service-proxy/): behind Traefik at `api.opsforge.localhost`
 - [Lab 07](../../labs/07-cicd-pipeline/): unit tests ([main_test.go](main_test.go)), CI/CD to GHCR, deploy over SSH
+- [Lab 08](../../labs/08-zero-downtime-deploy/): drains on SIGTERM (`SHUTDOWN_DELAY`)
+- [Lab 11](../../labs/11-observability/): `/metrics` ([metrics.go](metrics.go)), scraped via Docker labels

@@ -15,6 +15,11 @@ services:
     ports:
       # Bound to localhost only: Docker-published ports bypass ufw (see lab 01).
       - "127.0.0.1:${APP_PORT:-8000}:8000"
+    labels:
+      # Scraped by Prometheus via Docker discovery (lab 11): every replica is found.
+      prometheus.scrape: "true"
+      prometheus.port: "8000"
+      prometheus.job: hello-api
     depends_on:
       db:
         condition: service_healthy

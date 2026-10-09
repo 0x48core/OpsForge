@@ -1,0 +1,61 @@
+# Alert rules (lab 11). Test with: promtool check rules alerts.yml
+groups:
+  - name: availability
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.job }} target {{ $labels.instance }} is down"
+          description: "Prometheus has not been able to scrape it for over 1 minute."
+
+      # Containers found by Docker discovery don't go "down" when stopped: they
+      # disappear, and up == 0 never fires. absent() catches "nothing to scrape".
+      - alert: ServiceMissing
+        expr: absent(up{job="hello-api"}) or absent(up{job="traefik"})
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No {{ $labels.job }} instance is running"
+          description: "Prometheus finds no {{ $labels.job }} container to scrape for over 1 minute."
+
+      - alert: HelloApiHighErrorRate
+        expr: |
+          sum(rate(traefik_service_requests_total{service=~"hello-api.*", code=~"5.."}[5m]))
+            / sum(rate(traefik_service_requests_total{service=~"hello-api.*"}[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "hello-api: {{ $value | humanizePercentage }} of requests fail with 5xx"
+
+  - name: host
+    rules:
+      - alert: HostDiskAlmostFull
+        expr: |
+          node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs"}
+            / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs"} < 0.10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk {{ $labels.mountpoint }} has less than 10% free"
+
+      - alert: HostHighMemory
+        expr: 1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes > 0.90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory is {{ $value | humanizePercentage }} used"
+
+      - alert: HostHighCpu
+        expr: 1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) > 0.90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU is {{ $value | humanizePercentage }} busy"

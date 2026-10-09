@@ -1,0 +1,40 @@
+// Grafana Alloy (lab 11): ship every container's logs to Loki.
+// Containers write to stdout/stderr as usual; nothing changes in the apps.
+
+discovery.docker "containers" {
+  host = "tcp://socket-proxy:2375"
+}
+
+// Turn Docker metadata into Loki labels. Keep labels few and low-cardinality:
+// project, service, container. Never request IDs or user IDs.
+discovery.relabel "containers" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    target_label  = "project"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "service"
+  }
+}
+
+loki.source.docker "containers" {
+  host       = "tcp://socket-proxy:2375"
+  targets    = discovery.relabel.containers.output
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
