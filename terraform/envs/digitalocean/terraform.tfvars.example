@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars (git-ignored) and adjust.
+domain = "example.com"
+
+# Optional overrides:
+# region      = "sgp1"
+# size        = "s-2vcpu-4gb"
+# ssh_port    = 2222                # must match ansible ssh_port
+# admin_cidrs = ["203.0.113.7/32"]  # your IP only, if it is stable
