@@ -43,7 +43,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 | # | Lab | Status |
 |---|---|---|
 | 09 | [Ansible: rebuild the server in one command](labs/09-ansible/) | 🟨 |
-| 10 | [Terraform: provision VPS, DNS, firewall](labs/10-terraform/) | ⬜ |
+| 10 | [Terraform: provision VPS, DNS, firewall](labs/10-terraform/) | 🟨 |
 
 ### Phase 5 — Observability & Kubernetes
 | # | Lab | Status |

@@ -1,0 +1,38 @@
+# Checks the Terraform code on every change (lab 10). Never applies anything:
+# no cloud credentials are stored in CI.
+name: terraform
+
+on:
+  push:
+    branches: [main]
+    paths: [terraform/**, .github/workflows/terraform.yml]
+  pull_request:
+    paths: [terraform/**, .github/workflows/terraform.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: fmt and validate (${{ matrix.env }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [local, digitalocean]
+    defaults:
+      run:
+        working-directory: terraform/envs/${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive -diff ../..
+
+      - name: Init without a backend
+        run: terraform init -backend=false -input=false
+
+      - name: Validate
+        run: terraform validate

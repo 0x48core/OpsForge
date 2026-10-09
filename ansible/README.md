@@ -54,6 +54,8 @@ The fake VPS is a privileged container. Fine for testing on your Mac; never a re
 
 ## Production
 
+`terraform apply` in [terraform/envs/digitalocean](../terraform/envs/digitalocean/) writes `inventory/production/hosts.yml` for you (lab 10). Without Terraform, copy the example:
+
 ```bash
 cp inventory/production/hosts.yml.example inventory/production/hosts.yml
 cp inventory/production/group_vars/servers/vault.yml.example inventory/production/group_vars/servers/vault.yml
