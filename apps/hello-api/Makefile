@@ -4,10 +4,14 @@ VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 ARCH    ?= arm64
 LDFLAGS := -s -w -X main.version=$(VERSION)
 
-.PHONY: run build build-linux docker-build clean
+.PHONY: run test build build-linux docker-build clean
 
 run:
 	go run .
+
+test:
+	go vet ./...
+	go test -race -count=1 ./...
 
 build:
 	go build -ldflags "$(LDFLAGS)" -o bin/hello-api .

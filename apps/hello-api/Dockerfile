@@ -2,7 +2,9 @@
 
 # ---- Stage 1: build ----------------------------------------------------------
 # Full Go toolchain (~300 MB), used only to compile. Not shipped.
-FROM golang:1.26-alpine AS build
+# --platform=$BUILDPLATFORM: always run the compiler natively and let Go
+# cross-compile for the target (fast), instead of emulating it with QEMU (slow).
+FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS build
 WORKDIR /src
 
 # Download dependencies first: this layer is cached until go.mod/go.sum change,
@@ -12,9 +14,10 @@ RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
 COPY . .
 ARG VERSION=dev
+ARG TARGETOS TARGETARCH
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 go build -ldflags "-s -w -X main.version=${VERSION}" -o /out/hello-api .
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "-s -w -X main.version=${VERSION}" -o /out/hello-api .
 
 # ---- Stage 2: run ------------------------------------------------------------
 # Distroless: no shell, no package manager, just CA certs, tzdata, and a

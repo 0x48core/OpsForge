@@ -36,7 +36,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 ### Phase 3 — CI/CD
 | # | Lab | Status |
 |---|---|---|
-| 07 | [CI/CD pipeline](labs/07-cicd-pipeline/) | ⬜ |
+| 07 | [CI/CD pipeline](labs/07-cicd-pipeline/) | 🟨 |
 | 08 | [Zero-downtime deployment](labs/08-zero-downtime-deploy/) | ⬜ |
 
 ### Phase 4 — Infrastructure as Code
