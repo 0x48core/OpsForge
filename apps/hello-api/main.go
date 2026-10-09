@@ -26,12 +26,18 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
+	"sync/atomic"
 	"syscall"
 	"time"
 )
 
 // version is set at build time: go build -ldflags "-X main.version=1.0.0"
 var version = "dev"
+
+// draining is set on SIGTERM: /health starts failing so load balancers stop
+// sending new requests, while everything else keeps working (lab 08).
+var draining atomic.Bool
 
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
@@ -65,6 +71,15 @@ func main() {
 	}()
 
 	<-ctx.Done()
+
+	// Drain: fail /health and keep serving for SHUTDOWN_DELAY, so the proxy's
+	// health check removes this instance before it stops accepting connections.
+	if delay := shutdownDelay(); delay > 0 {
+		draining.Store(true)
+		log.Printf("draining for %s", delay)
+		time.Sleep(delay)
+	}
+
 	log.Print("shutting down")
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -77,6 +92,10 @@ func main() {
 func newMux(st *store) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+		if draining.Load() {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "draining"})
+			return
+		}
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
@@ -165,6 +184,15 @@ func logRequests(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 		log.Printf("%s %s %s %s", clientIP(r), r.Method, r.URL.Path, time.Since(start))
 	})
+}
+
+// shutdownDelay reads SHUTDOWN_DELAY in seconds (default 0: no draining).
+func shutdownDelay() time.Duration {
+	n, err := strconv.Atoi(getenv("SHUTDOWN_DELAY", "0"))
+	if err != nil || n < 0 {
+		return 0
+	}
+	return time.Duration(n) * time.Second
 }
 
 func getenv(key, fallback string) string {

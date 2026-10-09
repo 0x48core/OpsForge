@@ -3,6 +3,10 @@
 services:
   app:
     ports: !reset []   # drop the 127.0.0.1:8000 publish from compose.yaml
+    environment:
+      # On SIGTERM, fail /health for 5 s before shutting down, so Traefik's
+      # health check (every 2 s) stops routing here first (lab 08).
+      SHUTDOWN_DELAY: "5"
     networks:
       - default        # still reaches db and cache
       - proxy          # reachable by Traefik
@@ -11,6 +15,11 @@ services:
       - traefik.http.routers.hello-api.rule=Host(`api.opsforge.localhost`)
       - traefik.http.routers.hello-api.entrypoints=websecure
       - traefik.http.services.hello-api.loadbalancer.server.port=8000
+      # Zero-downtime deploys (lab 08):
+      - traefik.http.routers.hello-api.middlewares=retry@file
+      - traefik.http.services.hello-api.loadbalancer.healthcheck.path=/health
+      - traefik.http.services.hello-api.loadbalancer.healthcheck.interval=2s
+      - traefik.http.services.hello-api.loadbalancer.healthcheck.timeout=1s
 
 networks:
   proxy:
