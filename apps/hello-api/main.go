@@ -13,6 +13,7 @@
 //	GET  /ready   readiness: Postgres and Redis (if configured) are reachable
 //	GET  /visits  visit counts from Redis and Postgres
 //	POST /visits  record a visit in both
+//	GET  /metrics Prometheus metrics
 //
 // Postgres and Redis are optional, enabled by DATABASE_URL and REDIS_URL.
 package main
@@ -125,12 +126,16 @@ func newMux(st *store) http.Handler {
 	})
 	mux.HandleFunc("POST /visits", func(w http.ResponseWriter, r *http.Request) {
 		v, err := st.recordVisit(r.Context(), clientIP(r))
+		if err == nil {
+			visitsRecorded.Inc()
+		}
 		writeResult(w, v, err)
 	})
+	mux.Handle("GET /metrics", metricsHandler())
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "not found"})
 	})
-	return mux
+	return instrument(mux)
 }
 
 // healthcheck lets the container check itself without curl or wget,

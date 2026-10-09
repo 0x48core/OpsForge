@@ -1,0 +1,163 @@
+# Observability: metrics (Prometheus), logs (Loki + Alloy), dashboards (Grafana),
+# alerts (Alertmanager) for everything on this host (lab 11).
+# Prerequisites: the traefik stack, the proxy network, and .env (from .env.example).
+# Usage: docker compose up -d
+name: observability
+
+services:
+  # --- Metrics ---------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v3.15.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.external-url=https://prometheus.${DOMAIN:-opsforge.localhost}
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+      - prometheus-data:/prometheus
+    networks: [proxy, observability]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prometheus.rule=Host(`prometheus.${DOMAIN:-opsforge.localhost}`)
+      - traefik.http.routers.prometheus.entrypoints=websecure
+      - traefik.http.routers.prometheus.middlewares=dashboard-auth@file
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+    mem_limit: 512m
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.34.1
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --web.external-url=https://alertmanager.${DOMAIN:-opsforge.localhost}
+    volumes:
+      - ./alertmanager:/etc/alertmanager:ro
+      - alertmanager-data:/alertmanager
+    networks: [proxy, observability]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.alertmanager.rule=Host(`alertmanager.${DOMAIN:-opsforge.localhost}`)
+      - traefik.http.routers.alertmanager.entrypoints=websecure
+      - traefik.http.routers.alertmanager.middlewares=dashboard-auth@file
+      - traefik.http.services.alertmanager.loadbalancer.server.port=9093
+    mem_limit: 128m
+    restart: unless-stopped
+
+  # Host metrics: CPU, memory, disk, network. On Docker Desktop this is the
+  # Linux VM Docker runs in, not your Mac.
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    command:
+      - --path.rootfs=/host
+    pid: host
+    volumes:
+      # On a Linux VPS, ":ro,rslave" also picks up filesystems mounted later;
+      # Docker Desktop's VM doesn't support rslave, so plain read-only is used.
+      - /:/host:ro
+    networks: [observability]
+    mem_limit: 64m
+    restart: unless-stopped
+
+  # Per-container metrics: CPU, memory, network, restarts.
+  cadvisor:
+    image: ghcr.io/google/cadvisor:v0.60.6
+    command:
+      - --docker_only=true
+      - --housekeeping_interval=15s
+      - --store_container_labels=false
+      - --whitelisted_container_labels=com.docker.compose.project,com.docker.compose.service
+      # Container names and labels via the read-only socket proxy, not the socket.
+      # (Mounting /var/run also breaks on Docker Desktop: it's shared from macOS.)
+      - --docker=tcp://socket-proxy:2375
+      # Docker 29 stores images in containerd: cAdvisor reads container details there.
+      - --containerd=/run/containerd/containerd.sock
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      # cAdvisor is privileged (it reads every container's cgroups), so it can
+      # already see everything; this socket adds container metadata.
+      - /run/containerd/containerd.sock:/run/containerd/containerd.sock:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks: [observability]
+    mem_limit: 256m
+    restart: unless-stopped
+
+  # --- Logs ------------------------------------------------------------------
+  loki:
+    image: grafana/loki:3.7.8
+    command: -config.file=/etc/loki/loki.yml
+    volumes:
+      - ./loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki-data:/loki
+    networks: [observability]
+    mem_limit: 512m
+    restart: unless-stopped
+
+  # Collects every container's logs through the Docker API and sends them to Loki.
+  alloy:
+    image: grafana/alloy:v1.20.1
+    command:
+      - run
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - alloy-data:/var/lib/alloy/data
+    networks: [observability]
+    mem_limit: 384m   # measured ~240 MiB tailing ~25 containers
+    restart: unless-stopped
+
+  # Read-only Docker API for Prometheus and Alloy, instead of mounting the
+  # socket (root-equivalent) into them (labs 05-06). Only on the internal network.
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.5.0
+    environment:
+      CONTAINERS: 1   # list/inspect containers, read logs
+      NETWORKS: 1     # needed by Docker service discovery
+      INFO: 1         # docker info (cAdvisor checks it at startup)
+      POST: 0         # read-only: no create, start, stop, exec
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [observability]
+    mem_limit: 64m
+    restart: unless-stopped
+
+  # --- Dashboards --------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:13.2.3
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}
+      GF_SERVER_ROOT_URL: https://grafana.${DOMAIN:-opsforge.localhost}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    networks: [proxy, observability]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN:-opsforge.localhost}`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+    mem_limit: 256m
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+  alertmanager-data:
+  loki-data:
+  alloy-data:
+  grafana-data:
+
+networks:
+  proxy:
+    external: true
+  observability: {}

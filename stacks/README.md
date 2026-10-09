@@ -10,6 +10,7 @@ Docker Compose stacks, one folder per stack (`stacks/<name>/compose.yaml`, plus 
 | [gitea](gitea/) | Self-hosted Git server (`git.`), SSH on 2222 | 06 |
 | [uptime-kuma](uptime-kuma/) | Uptime monitoring (`status.`) | 06 |
 | [portainer](portainer/) | Docker management UI (`portainer.`); read-write Docker socket | 06 |
+| [observability](observability/) | Prometheus, Alertmanager, Grafana (`grafana.`), Loki, Alloy, node-exporter, cAdvisor | 11 |
 
 Web-facing stacks join the shared external `proxy` network (`docker network create proxy`) and are routed by Traefik labels.
 

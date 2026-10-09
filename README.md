@@ -48,7 +48,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 ### Phase 5 — Observability & Kubernetes
 | # | Lab | Status |
 |---|---|---|
-| 11 | [Observability stack](labs/11-observability/) | ⬜ |
+| 11 | [Observability stack](labs/11-observability/) | 🟨 |
 | 12 | [K3s, Helm & GitOps](labs/12-k3s-gitops/) | ⬜ |
 
 ### Beyond

@@ -1,0 +1,27 @@
+# Alertmanager (lab 11): groups alerts and sends notifications.
+# By default alerts are only shown in the UI. To get messages, uncomment ONE
+# receiver below, put the secret in the file it names (alertmanager/secrets/
+# is git-ignored), point route.receiver at it, and restart alertmanager.
+route:
+  receiver: ui-only
+  group_by: [alertname]
+  group_wait: 30s       # wait for related alerts before the first message
+  group_interval: 5m    # then batch new alerts in the same group
+  repeat_interval: 4h   # remind while still firing
+
+receivers:
+  - name: ui-only
+
+  # Telegram: create a bot with @BotFather, put its token in secrets/telegram-token,
+  # and use your chat id (message @userinfobot to find it).
+  # - name: telegram
+  #   telegram_configs:
+  #     - bot_token_file: /etc/alertmanager/secrets/telegram-token
+  #       chat_id: 123456789
+  #       send_resolved: true
+
+  # Discord: Server settings -> Integrations -> Webhooks, put the URL in secrets/discord-webhook.
+  # - name: discord
+  #   discord_configs:
+  #     - webhook_url_file: /etc/alertmanager/secrets/discord-webhook
+  #       send_resolved: true
