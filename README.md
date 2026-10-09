@@ -15,7 +15,7 @@ OpsForge has two layers:
 
 Rule of thumb: if I'd want to run it again next month, it belongs in an infrastructure folder, and the lab links to it. See [docs/conventions.md](docs/conventions.md).
 
-**Learning path:** [docs/learning-roadmap.md](docs/learning-roadmap.md) is the curriculum behind the labs: 14 skill domains (plus a service mesh track) in levels, with checkpoints, resources, certifications, and an 18-month plan.
+**Learning path:** [docs/learning-roadmap.md](docs/learning-roadmap.md) is the curriculum behind the labs: 14 skill domains (plus service mesh and data tracks) in levels, with checkpoints, resources, certifications, fundamentals and career skills, and a 21-month plan.
 
 ## Roadmap
 
@@ -123,8 +123,23 @@ Labs 33–38 run free on k3d; 39–40 need real VMs (GCE, lab 29); 31 and 42 use
 
 Demo app: `frontend` → `hello-api` + `quotes` (v1/v2), all on k3d. Learn the concepts with Linkerd, go deep with Istio, then compare sidecarless options (Istio ambient, Cilium).
 
+### Phase 12 — Data services and messaging
+| # | Lab | Status |
+|---|---|---|
+| 51 | [Operating data services: the playbook](labs/51-operating-data-services/) | ⬜ |
+| 52 | [PostgreSQL in depth](labs/52-postgresql-in-depth/) | ⬜ |
+| 53 | [MySQL](labs/53-mysql/) | ⬜ |
+| 54 | [Redis and Valkey](labs/54-redis-and-valkey/) | ⬜ |
+| 55 | [MongoDB](labs/55-mongodb/) | ⬜ |
+| 56 | [RabbitMQ](labs/56-rabbitmq/) | ⬜ |
+| 57 | [Apache Kafka](labs/57-kafka/) | ⬜ |
+| 58 | [Event-driven OpsForge](labs/58-event-driven-opsforge/) | ⬜ |
+| 59 | [Schema migrations and disaster recovery](labs/59-data-migrations-and-dr/) | ⬜ |
+
+Each data service is run with Docker Compose first, then on k3d with its operator, through the same checklist: deploy, HA, backup + restore, monitoring, upgrades, security. Run one at a time: Kafka and MongoDB clusters need a few GB of RAM each.
+
 ### Beyond
-New labs get the next number (51, 52, …) and a new phase heading if needed: DevSecOps and SRE (planned in the [learning roadmap](docs/learning-roadmap.md)), message queues, whatever comes next.
+New labs get the next number (60, 61, …) and a new phase heading if needed: DevSecOps and SRE (phases 13–14, planned in the [learning roadmap](docs/learning-roadmap.md)), or whatever comes next.
 
 ## Repository layout
 

@@ -63,7 +63,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Commit, branch, merge, PRs, `.gitignore`, never committing secrets | this repo: a branch and PR per lab | - [ ] Write commit messages and PRs others understand |
 | 2 | Rebase, conflicts, revert, bisect, tags and semantic versioning, code review | — | - [ ] Find a bad commit with `git bisect`; recover a "lost" commit with `reflog` |
-| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 13 | - [ ] Design a branching and release process for a team |
+| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 14 | - [ ] Design a branching and release process for a team |
 
 **Resources:** [Pro Git](https://git-scm.com/book/en/v2) (free) · [Conventional Commits](https://www.conventionalcommits.org/) · [trunkbaseddevelopment.com](https://trunkbaseddevelopment.com/).
 
@@ -73,7 +73,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Images, containers, volumes, ports, Compose | [04](../labs/04-dockerize-app/), [06](../labs/06-self-hosted-tools/) | - [ ] Containerize an app with its database from scratch |
 | 2 | Multi-stage, small and non-root images, layer caching, multi-arch, healthchecks, registries | [04](../labs/04-dockerize-app/), [07](../labs/07-cicd-pipeline/) | - [ ] Get an image under 30 MB that runs as non-root |
-| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), [37](../labs/37-k8s-security/), Phase 12 | - [ ] Build a container by hand with `unshare` |
+| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), [37](../labs/37-k8s-security/), Phase 13 | - [ ] Build a container by hand with `unshare` |
 
 **Resources:** [Docker docs](https://docs.docker.com/get-started/) · *Docker Deep Dive* (Nigel Poulton) · [What even is a container?](https://jvns.ca/blog/2016/10/10/what-even-is-a-container/).
 
@@ -83,7 +83,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Pipelines: test, build, push, deploy; secrets in CI | [07](../labs/07-cicd-pipeline/) | - [ ] Build a pipeline from an empty repo to a running deploy |
 | 2 | Zero-downtime deploys, rollback, immutable artifacts, GitOps | [08](../labs/08-zero-downtime-deploy/), [12](../labs/12-k3s-gitops/) | - [ ] Deploy under load with zero errors, and roll back in one command |
-| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | [27](../labs/27-gcp-project-structure/), [42](../labs/42-k8s-advanced-delivery/), Phase 13 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
+| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | [27](../labs/27-gcp-project-structure/), [42](../labs/42-k8s-advanced-delivery/), Phase 14 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
 
 **Resources:** *Continuous Delivery* (Humble & Farley) · *Accelerate* (Forsgren, Humble, Kim) · [dora.dev](https://dora.dev/) · [GitHub Actions docs](https://docs.github.com/actions).
 
@@ -93,7 +93,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Declarative vs imperative, idempotency, Ansible playbooks | [09](../labs/09-ansible/) | - [ ] Rebuild a server from zero with one command |
 | 2 | Terraform: state, plan, providers, modules; secrets (Vault, ansible-vault) | [10](../labs/10-terraform/) | - [ ] Create and destroy a cloud environment from code, with remote state |
-| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | [27](../labs/27-gcp-project-structure/), Phase 12 | - [ ] Write a Terraform module others reuse, with tests |
+| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | [27](../labs/27-gcp-project-structure/), Phase 13 | - [ ] Write a Terraform module others reuse, with tests |
 
 **Resources:** [Ansible docs](https://docs.ansible.com/) · *Terraform: Up & Running* (Yevgeniy Brikman) · [Terraform tutorials](https://developer.hashicorp.com/terraform/tutorials).
 
@@ -150,20 +150,21 @@ A mesh moves encryption, retries, traffic control, and per-call telemetry out of
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
 | 1 | SSH keys, firewalls, least privilege, secrets out of git, updates | [01](../labs/01-vps-hardening/), [07](../labs/07-cicd-pipeline/) | - [ ] Explain every secret in this repo: where it lives, who can read it |
-| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), [37](../labs/37-k8s-security/), Phase 12 | - [ ] Make CI fail on critical vulnerabilities in your image |
-| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), zero-trust service identity, threat modelling | [37](../labs/37-k8s-security/), [48](../labs/48-mesh-security-zero-trust/), Phase 12 | - [ ] Only signed images can run in your cluster |
+| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), [37](../labs/37-k8s-security/), Phase 13 | - [ ] Make CI fail on critical vulnerabilities in your image |
+| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), zero-trust service identity, threat modelling | [37](../labs/37-k8s-security/), [48](../labs/48-mesh-security-zero-trust/), Phase 13 | - [ ] Only signed images can run in your cluster |
 
 **Resources:** [OWASP Top 10](https://owasp.org/www-project-top-ten/) · [SLSA](https://slsa.dev/) · [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks) · *Container Security* (Liz Rice).
 
-### 12. Data and databases (for operators)
+### 12. Data services and messaging (for operators)
 
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
-| 1 | Running Postgres and Redis in containers, connections, basic SQL | [04](../labs/04-dockerize-app/) | - [ ] Connect, query, and explain what's in the database |
-| 2 | **Backups and restore tests**, migrations, connection pooling, indexes | [03](../labs/03-automated-backup/), [24](../labs/24-caching-and-databases/) | - [ ] Restore production data onto a fresh server, timed |
-| 3 | Replication, failover, consistency trade-offs, caching patterns | [24](../labs/24-caching-and-databases/) | - [ ] Explain what your system does during a database failover |
+| 1 | Running Postgres and Redis in containers, connections, basic SQL; what makes stateful services hard | [04](../labs/04-dockerize-app/), [51](../labs/51-operating-data-services/) | - [ ] Explain for each OpsForge data service how it's deployed, backed up, and monitored |
+| 2 | **Backups and restore tests**, connection pooling, indexes, replication; MySQL vs PostgreSQL; Redis persistence and eviction; MongoDB replica sets | [03](../labs/03-automated-backup/), [24](../labs/24-caching-and-databases/), [52](../labs/52-postgresql-in-depth/)–[55](../labs/55-mongodb/) | - [ ] Restore production data onto a fresh server, timed, for two different databases |
+| 3 | Operators and automatic failover, point-in-time recovery, sharding; messaging with **RabbitMQ** and **Kafka** (acks, dead letters, partitions, consumer lag) | [52](../labs/52-postgresql-in-depth/)–[57](../labs/57-kafka/) | - [ ] Kill a primary or a broker under load and show what was (not) lost |
+| 4 | Event-driven design (outbox, idempotent consumers), zero-downtime migrations, disaster recovery drills | [58](../labs/58-event-driven-opsforge/), [59](../labs/59-data-migrations-and-dr/) | - [ ] A DR drill from zero with measured RPO and RTO |
 
-**Resources:** [PostgreSQL docs](https://www.postgresql.org/docs/) · *Designing Data-Intensive Applications* (Martin Kleppmann): the most valuable book on this list.
+**Resources:** *Designing Data-Intensive Applications* (Martin Kleppmann): the most valuable book on this list · [PostgreSQL docs](https://www.postgresql.org/docs/) · *PostgreSQL 14 Internals* (Egor Rogov, free from Postgres Professional) · [CloudNativePG docs](https://cloudnative-pg.io/documentation/) · *High Performance MySQL* · [Valkey](https://valkey.io/) / [Redis](https://redis.io/docs/) docs · [MongoDB University](https://learn.mongodb.com/) (free) · [RabbitMQ tutorials](https://www.rabbitmq.com/tutorials) · *Kafka: The Definitive Guide* · [Strimzi docs](https://strimzi.io/documentation/) · *Enterprise Integration Patterns* (Hohpe, Woolf).
 
 ### 13. Scalability, reliability, and SRE
 
@@ -171,7 +172,7 @@ A mesh moves encryption, retries, traffic control, and per-call telemetry out of
 |---|---|---|---|
 | 1 | Availability, redundancy, health checks, graceful shutdown | [04](../labs/04-dockerize-app/), [08](../labs/08-zero-downtime-deploy/) | - [ ] Explain why a deploy can cause errors and how to prevent it |
 | 2 | Load testing, capacity planning, horizontal scaling, caching, queues | [22](../labs/22-load-testing-capacity/)–[24](../labs/24-caching-and-databases/) | - [ ] Find your system's breaking point and its bottleneck |
-| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), [47](../labs/47-mesh-traffic-management/), Phase 13 | - [ ] Lead a (practice) incident and write a blameless postmortem |
+| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), [47](../labs/47-mesh-traffic-management/), Phase 14 | - [ ] Lead a (practice) incident and write a blameless postmortem |
 
 **Resources:** [Site Reliability Engineering + The SRE Workbook](https://sre.google/books/) (free) · *Release It!* (Michael Nygard) · [incident.io guide](https://incident.io/guide).
 
@@ -189,16 +190,16 @@ A mesh moves encryption, retries, traffic control, and per-call telemetry out of
 
 ## Labs still to create (future phases)
 
-Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), and 11 (service mesh, labs 43–50) exist as lab stubs. Still listed here only:
+Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), 11 (service mesh, labs 43–50), and 12 (data services and messaging, labs 51–59) exist as lab stubs. Still listed here only:
 
 | Phase | Labs |
 |---|---|
-| **12 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · supply-chain levels (SLSA) · threat modelling one system |
-| **13 — SRE and delivery** | dev/staging/prod promotion · incident simulation and postmortem · DORA metrics for this repo |
+| **13 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · supply-chain levels (SLSA) · threat modelling one system |
+| **14 — SRE and delivery** | dev/staging/prod promotion · incident simulation and postmortem · DORA metrics for this repo |
 
 ---
 
-## Suggested path (about 18 months at 8–10 hours a week)
+## Suggested path (about 21 months at 8–10 hours a week)
 
 | Stage | Months | Focus | Labs | Milestone |
 |---|---|---|---|---|
@@ -206,7 +207,8 @@ Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), and 11 (se
 | **B. Automation** | 4–6 | CI/CD, IaC, observability, backups, a real VPS online | 03, 07–11 | The VPS rebuilt from code; alerts on your phone |
 | **C. Platforms** | 7–10 | Kubernetes basics, Google Cloud, scaling | 12, 22–24, 26–31, 33–36 | **Associate Cloud Engineer**; **CKAD** |
 | **D. Depth** | 11–15 | Kubernetes deep dive, OS internals, security, reliability | 14–16, 18–21, 25, 32, 37–42 | **CKA**, then **CKS**; a public portfolio |
-| **E. Service mesh** | 16–18 | Envoy, Linkerd, Istio in depth, sidecarless meshes | 43–50 | **ICA** (Istio Certified Associate); a measured mesh comparison in your portfolio |
+| **E. Data and messaging** | 16–18 | PostgreSQL, MySQL, Redis, MongoDB, RabbitMQ, Kafka; event-driven design; DR | 51–59 | A DR drill with measured RPO/RTO; optional Kafka admin certification |
+| **F. Service mesh** | 19–21 | Envoy, Linkerd, Istio in depth, sidecarless meshes | 43–50 | **ICA** (Istio Certified Associate); a measured mesh comparison in your portfolio |
 
 ### A weekly rhythm
 
@@ -216,6 +218,8 @@ Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), and 11 (se
 | ~5 h | **Practice:** do the lab yourself; break things on purpose |
 | ~1 h | **Write:** "What broke", "Lessons learned", "My notes"; tick checkpoints here |
 | ~30 min | **Review:** what's next, and one thing you'd explain differently now |
+
+Stages E and F are interchangeable: pick the one your next job needs most. Data services come up in almost every role; service meshes mainly in larger platform teams.
 
 Small and steady beats long and rare: five sessions of 1.5 hours teach more than one 8-hour day.
 
@@ -231,8 +235,44 @@ Small and steady beats long and rare: five sessions of 1.5 hours teach more than
 | Google Professional Cloud DevOps Engineer | After Stage D | Senior-level: SRE practices on GCP |
 | ICA (Istio Certified Associate) | After labs 46–49 | Hands-on Istio: traffic, security, observability |
 | CCA (Cilium Certified Associate) | Optional, after lab 50 | eBPF networking and Cilium's mesh |
+| Confluent Certified Administrator for Apache Kafka | Optional, after lab 57 | If your work involves Kafka |
+| MongoDB Associate DBA | Optional, after lab 55 | If your work involves MongoDB |
 
 Certificates open doors; the labs and your write-ups are what convince people once the door is open.
+
+---
+
+## Appendix: fundamentals and career
+
+### Fundamentals under everything
+
+These aren't tools, but they explain why the tools behave the way they do. Study them alongside the labs, roughly when the "when" column says.
+
+| Topic | What to learn | When | Resources |
+|---|---|---|---|
+| **Distributed systems** | CAP and PACELC, consistency models, consensus (**Raft**), leader election, idempotency, clocks and ordering, why "exactly once" is hard | With labs 39–40 (etcd) and 52–57 | *Designing Data-Intensive Applications* · [MIT 6.5840 Distributed Systems](https://pdos.csail.mit.edu/6.824/) (free lectures) · [Raft visualisation](https://raft.github.io/) · Martin Kleppmann's [distributed systems lectures](https://www.youtube.com/playlist?list=PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB) (free) |
+| **System design** | Requirements, back-of-the-envelope estimates, trade-offs, diagrams; designing a whole system end to end | After Stage C, then ongoing (interviews) | [System Design Primer](https://github.com/donnemartin/system-design-primer) (free) · *System Design Interview* vol. 1–2 (Alex Xu) |
+| **Identity for humans** | OAuth2, **OIDC**, SSO, sessions vs tokens; a login (Keycloak + oauth2-proxy) in front of Grafana, Argo CD, Portainer | With labs 37 and 48 | [OAuth 2.0 Simplified](https://www.oauth.com/) (free) · [Keycloak docs](https://www.keycloak.org/documentation) · [oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/) |
+| **APIs** | REST design, **gRPC** and protobuf, versioning, API gateways, rate limits | With labs 43–47 | [gRPC docs](https://grpc.io/docs/) · [Google API design guide](https://cloud.google.com/apis/design) |
+| **Disaster recovery** | RPO and RTO, backup strategies (3-2-1), DR tiers, multi-region failover, DR drills | With labs 03 and 59 | [Google Cloud DR planning guide](https://cloud.google.com/architecture/dr-scenarios-planning-guide) |
+| **CLI fluency** | `jq`, `yq`, `awk`, `sed`, regex, `tmux`, `vim` basics, shell history and aliases | From day one; 15 minutes a day | [The Missing Semester](https://missing.csail.mit.edu/) (free, MIT) · [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line) · [jq manual](https://jqlang.org/manual/) |
+
+### Career skills
+
+| Skill | How to practise |
+|---|---|
+| **Interviews** | Live troubleshooting ("this pod won't start"), system design, and telling incident stories. Every lab's "What broke" section is a ready-made story: symptom, investigation, cause, fix |
+| **Portfolio** | Finished labs with your own notes; a blog post every 2–3 labs; a clean README with the roadmap (this repo) |
+| **Technical English** | Write all docs, commits, and notes in English (you already do); read postmortems and RFCs; explain a lab out loud |
+| **Staying current** | Release notes of the tools you use; the [CNCF landscape](https://landscape.cncf.io/); one newsletter such as [SRE Weekly](https://sreweekly.com/) |
+
+### Specialisations (choose one or two later)
+
+- **Edge and CDN:** Cloudflare, caching, WAF, DDoS protection
+- **Compliance:** SOC 2, ISO 27001, GDPR basics, audit trails
+- **MLOps and LLMOps:** GPU workloads on Kubernetes, model serving
+- **eBPF in depth:** Cilium, Tetragon, kernel-level observability
+- **A second cloud:** AWS or Azure, mapped from GCP (most concepts transfer one to one)
 
 ---
 
