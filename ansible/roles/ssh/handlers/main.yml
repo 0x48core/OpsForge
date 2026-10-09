@@ -1,0 +1,11 @@
+# Ubuntu 24.04 starts sshd through ssh.socket: the port lives in the socket,
+# which systemd regenerates from sshd_config on daemon-reload (lab 01).
+- name: Restart sshd
+  ansible.builtin.shell: |
+    set -e
+    systemctl daemon-reload
+    if systemctl is-enabled --quiet ssh.socket 2>/dev/null; then
+      systemctl restart ssh.socket
+    fi
+    systemctl restart ssh.service
+  changed_when: true

@@ -1,0 +1,5 @@
+# Copy to vault.yml, fill in, then ENCRYPT before doing anything else:
+#   ansible-vault encrypt inventory/production/group_vars/servers/vault.yml
+# vault.yml is git-ignored. Commit it only encrypted, with `git add -f`.
+vault_traefik_dashboard_users: "admin:<bcrypt hash from: htpasswd -nB admin>"
+vault_hello_api_postgres_password: "<long random string: openssl rand -hex 24>"

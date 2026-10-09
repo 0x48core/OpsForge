@@ -12,7 +12,7 @@ services:
       - proxy          # reachable by Traefik
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hello-api.rule=Host(`api.opsforge.localhost`)
+      - traefik.http.routers.hello-api.rule=Host(`api.${DOMAIN:-opsforge.localhost}`)
       - traefik.http.routers.hello-api.entrypoints=websecure
       - traefik.http.services.hello-api.loadbalancer.server.port=8000
       # Zero-downtime deploys (lab 08):

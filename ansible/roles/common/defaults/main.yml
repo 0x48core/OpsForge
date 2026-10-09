@@ -1,0 +1,12 @@
+common_upgrade: true          # apt dist-upgrade on every run
+common_set_hostname: true
+common_packages:
+  - ca-certificates
+  - curl
+  - git
+  - gnupg
+  - htop
+  - python3-debian            # used by deb822_repository (docker role)
+  - python3-requests          # used by the community.docker modules
+  - rsync
+  - unattended-upgrades

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[DEFAULT]
+bantime  = {{ fail2ban_bantime }}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
+# Ubuntu 24.04 has no /var/log/auth.log by default: read the journal.
+backend  = systemd
+
+[sshd]
+enabled = true
+port    = {{ ssh_port }}

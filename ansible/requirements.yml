@@ -1,0 +1,6 @@
+# Collections used by the roles. Included in `brew install ansible`;
+# with ansible-core only: ansible-galaxy collection install -r requirements.yml
+collections:
+  - name: ansible.posix
+  - name: community.general
+  - name: community.docker

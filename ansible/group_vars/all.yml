@@ -1,0 +1,30 @@
+# Defaults for every server. Override per inventory in inventory/<env>/group_vars/servers/
+# (a named group beats "all"; inventory group_vars/all would NOT override these).
+
+# --- Connection -------------------------------------------------------------
+# A fresh server: root on port 22. After the ssh role: admin_user on ssh_port.
+# site.yml detects which one works, so the same command runs on both.
+bootstrap_user: root
+bootstrap_port: 22          # how to reach the fresh server's sshd
+ssh_initial_port: 22        # the port sshd listens on before hardening
+
+# --- Users ------------------------------------------------------------------
+admin_user: ops
+admin_ssh_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/id_ed25519.pub') }}"
+deploy_user: deploy
+deploy_ssh_pubkey: ""       # public half of the CI deploy key (lab 07); empty = none
+
+# --- SSH and firewall -------------------------------------------------------
+ssh_port: 2222
+firewall_allowed_tcp_ports: [80, 443]
+
+# --- System -----------------------------------------------------------------
+server_hostname: opsforge
+server_timezone: Asia/Ho_Chi_Minh
+
+# --- OpsForge stacks --------------------------------------------------------
+domain: opsforge.localhost
+traefik_acme_email: ""      # set to enable Let's Encrypt (needs a public domain)
+# Secrets: define these in the inventory's vault (see inventory/production).
+traefik_dashboard_users: "{{ vault_traefik_dashboard_users }}"
+hello_api_postgres_password: "{{ vault_hello_api_postgres_password }}"

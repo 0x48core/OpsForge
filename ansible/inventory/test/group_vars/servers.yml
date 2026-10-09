@@ -1,0 +1,11 @@
+# Test overrides for the fake VPS. Its published ports differ from a real server:
+#   127.0.0.1:2201 -> container :22 (fresh sshd), 127.0.0.1:2202 -> :2202 (hardened)
+bootstrap_port: 2201
+ssh_port: 2202
+
+# Containers can't change their hostname or kernel settings like a VM can.
+common_set_hostname: false
+
+# Test-only values, NOT secrets: a real server gets these from an encrypted vault.
+vault_traefik_dashboard_users: "admin:$2y$05$1v9HS6HsMDzluqBjEk77oeKjenPLeRbd2T0oZQrJO8O/E0e1Lb/we"   # password: test
+vault_hello_api_postgres_password: test-only-password

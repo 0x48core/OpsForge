@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+# SSH hardening from lab 01. Loads first (00-), and in sshd the first value wins.
+Port {{ ssh_port }}
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+AllowUsers {{ ([admin_user] + ([deploy_user] if deploy_ssh_pubkey else [])) | join(' ') }}
+MaxAuthTries 3
+LoginGraceTime 30
+X11Forwarding no
