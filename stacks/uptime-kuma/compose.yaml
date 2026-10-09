@@ -1,0 +1,27 @@
+# Uptime Kuma: uptime monitoring with a web UI (lab 06).
+# Prerequisites: the traefik stack and the proxy network.
+# Usage: docker compose up -d
+name: uptime-kuma
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2.5.5
+    volumes:
+      - uptime-kuma-data:/app/data   # monitors, history, settings (SQLite)
+    networks:
+      # On the proxy network it can check other services by container name,
+      # e.g. http://gitea-gitea-1:3000/api/healthz
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.uptime-kuma.rule=Host(`status.opsforge.localhost`)
+      - traefik.http.routers.uptime-kuma.entrypoints=websecure
+      - traefik.http.services.uptime-kuma.loadbalancer.server.port=3001
+    restart: unless-stopped
+
+volumes:
+  uptime-kuma-data:
+
+networks:
+  proxy:
+    external: true

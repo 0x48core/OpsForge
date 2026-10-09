@@ -1,0 +1,41 @@
+# Gitea: self-hosted Git server (lab 06).
+# Prerequisites: the traefik stack and the proxy network.
+# Usage: docker compose up -d
+name: gitea
+
+services:
+  gitea:
+    # Rootless image: runs as an unprivileged user, built-in SSH server on 2222.
+    image: gitea/gitea:1.25.5-rootless
+    environment:
+      # Gitea reads GITEA__<section>__<KEY> into app.ini on startup.
+      GITEA__server__DOMAIN: git.opsforge.localhost
+      GITEA__server__ROOT_URL: https://git.opsforge.localhost/
+      GITEA__server__SSH_DOMAIN: localhost
+      GITEA__server__SSH_PORT: "2222"
+      GITEA__database__DB_TYPE: sqlite3
+      # Skip the web installer; the admin user is created with the CLI.
+      GITEA__security__INSTALL_LOCK: "true"
+      GITEA__service__DISABLE_REGISTRATION: "true"
+    volumes:
+      - gitea-data:/var/lib/gitea    # repositories, SQLite database, avatars
+      - gitea-config:/etc/gitea      # app.ini (contains generated secrets)
+    ports:
+      # Git over SSH. Traefik here only routes HTTP, so SSH is published directly.
+      - "127.0.0.1:2222:2222"
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gitea.rule=Host(`git.opsforge.localhost`)
+      - traefik.http.routers.gitea.entrypoints=websecure
+      - traefik.http.services.gitea.loadbalancer.server.port=3000
+    restart: unless-stopped
+
+volumes:
+  gitea-data:
+  gitea-config:
+
+networks:
+  proxy:
+    external: true
