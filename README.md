@@ -15,6 +15,8 @@ OpsForge has two layers:
 
 Rule of thumb: if I'd want to run it again next month, it belongs in an infrastructure folder, and the lab links to it. See [docs/conventions.md](docs/conventions.md).
 
+**Learning path:** [docs/learning-roadmap.md](docs/learning-roadmap.md) is the curriculum behind the labs: 14 skill domains in levels, with checkpoints, resources, certifications, and a 12-month plan.
+
 ## Roadmap
 
 Status: ⬜ todo · 🟨 in progress · ✅ done
@@ -94,6 +96,7 @@ OpsForge/
 ├── k8s/             # Kubernetes manifests, Helm charts, GitOps apps
 ├── .github/workflows/  # CI/CD pipelines
 └── docs/
+    ├── learning-roadmap.md  # curriculum: domains, levels, checkpoints, plan
     ├── architecture.md  # what currently runs on the server
     ├── conventions.md   # naming, secrets, workflow rules
     └── decisions/       # why I chose X over Y (ADRs)

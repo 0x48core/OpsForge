@@ -17,6 +17,7 @@ Each lab has two files:
 6. **Review:** answer "After the lab, check yourself" in `knowledge.md`, then fill in "Lessons learned".
 7. A lab is ✅ only when every "Done when" item is checked. Update the roadmap in the root README.
 8. Merge to `main`. Tag milestones if useful (`phase-1-done`).
+9. Tick the matching checkpoints in [learning-roadmap.md](learning-roadmap.md).
 
 ## Where code lives
 
