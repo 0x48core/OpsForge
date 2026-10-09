@@ -5,3 +5,11 @@ http:
     dashboard-auth:
       basicAuth:
         usersFile: /etc/traefik/secrets/dashboard-users
+
+    # Retry a request on another server if the connection fails, e.g. when it
+    # hits a container that is shutting down during a rolling deploy (lab 08).
+    # Only network errors are retried, never HTTP error responses.
+    retry:
+      retry:
+        attempts: 3
+        initialInterval: 100ms

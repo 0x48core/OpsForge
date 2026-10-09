@@ -29,7 +29,9 @@ USER nonroot:nonroot
 ENV HOST=0.0.0.0 PORT=8000
 EXPOSE 8000
 
-HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+# --start-interval: check every second while starting, so a new container is
+# marked healthy (and gets traffic from Traefik) quickly during a rolling deploy.
+HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --start-interval=1s --retries=3 \
     CMD ["/hello-api", "healthcheck"]
 
 # Exec form: hello-api is PID 1 and receives SIGTERM directly from docker stop.

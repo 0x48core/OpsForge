@@ -68,3 +68,17 @@ func TestClientIP(t *testing.T) {
 		t.Errorf("client_ip = %v, want 192.0.2.1 without X-Real-IP", got)
 	}
 }
+
+func TestHealthWhileDraining(t *testing.T) {
+	draining.Store(true)
+	defer draining.Store(false)
+
+	rec, body := do(t, "GET", "/health", nil)
+	if rec.Code != http.StatusServiceUnavailable || body["status"] != "draining" {
+		t.Errorf("got %d %v, want 503 draining", rec.Code, body)
+	}
+	// Real traffic is still served while draining.
+	if rec, _ := do(t, "GET", "/", nil); rec.Code != http.StatusOK {
+		t.Errorf("GET / while draining = %d, want 200", rec.Code)
+	}
+}

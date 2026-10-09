@@ -46,3 +46,6 @@ stacks/traefik/dynamic/tls.yml
 
 # Lab scratch space
 labs/**/scratch/
+
+# Deploy history written by stacks/*/deploy.sh
+.deploy-history
