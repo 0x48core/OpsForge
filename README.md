@@ -51,8 +51,35 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 | 11 | [Observability stack](labs/11-observability/) | 🟨 |
 | 12 | [K3s, Helm & GitOps](labs/12-k3s-gitops/) | 🟨 |
 
+### Phase 6 — Networking
+| # | Lab | Status |
+|---|---|---|
+| 13 | [Network fundamentals](labs/13-network-fundamentals/) | ⬜ |
+| 14 | [Container networking by hand](labs/14-linux-network-namespaces/) | ⬜ |
+| 15 | [DNS deep dive](labs/15-dns-deep-dive/) | ⬜ |
+| 16 | [WireGuard VPN and private access](labs/16-wireguard-vpn/) | ⬜ |
+
+### Phase 7 — Linux & OS internals
+| # | Lab | Status |
+|---|---|---|
+| 17 | [Processes, signals, and systemd](labs/17-processes-and-systemd/) | ⬜ |
+| 18 | [Containers from scratch](labs/18-containers-from-scratch/) | ⬜ |
+| 19 | [Storage and filesystems](labs/19-storage-and-filesystems/) | ⬜ |
+| 20 | [Performance troubleshooting](labs/20-performance-troubleshooting/) | ⬜ |
+| 21 | [Linux security hardening](labs/21-linux-security-hardening/) | ⬜ |
+
+### Phase 8 — Scalability & reliability
+| # | Lab | Status |
+|---|---|---|
+| 22 | [Load testing and capacity planning](labs/22-load-testing-capacity/) | ⬜ |
+| 23 | [Horizontal scaling and autoscaling](labs/23-horizontal-scaling/) | ⬜ |
+| 24 | [Caching and database scaling](labs/24-caching-and-databases/) | ⬜ |
+| 25 | [Resilience and chaos engineering](labs/25-resilience-and-chaos/) | ⬜ |
+
+Phases 6–8 deepen the foundations: each lab lists what it **builds on**, and all of them run locally (fake VPS, Docker, or k3d).
+
 ### Beyond
-New labs get the next number (13, 14, …) and a new phase heading if needed — security, cloud, databases, whatever comes next.
+New labs get the next number (26, 27, …) and a new phase heading if needed: message queues, cloud-managed services, service mesh, whatever comes next.
 
 ## Repository layout
 
