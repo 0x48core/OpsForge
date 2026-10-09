@@ -51,6 +51,30 @@ func main() {
 	}
 	defer st.close()
 
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           logRequests(newMux(st)),
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	go func() {
+		log.Printf("hello-api %s listening on %s", version, addr)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal(err)
+		}
+	}()
+
+	<-ctx.Done()
+	log.Print("shutting down")
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Print(err)
+	}
+}
+
+// newMux wires the routes. Separate from main so tests can call it directly.
+func newMux(st *store) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
@@ -87,27 +111,7 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "not found"})
 	})
-
-	srv := &http.Server{
-		Addr:              addr,
-		Handler:           logRequests(mux),
-		ReadHeaderTimeout: 5 * time.Second,
-	}
-
-	go func() {
-		log.Printf("hello-api %s listening on %s", version, addr)
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatal(err)
-		}
-	}()
-
-	<-ctx.Done()
-	log.Print("shutting down")
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(shutdownCtx); err != nil {
-		log.Print(err)
-	}
+	return mux
 }
 
 // healthcheck lets the container check itself without curl or wget,

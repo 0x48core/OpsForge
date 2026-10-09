@@ -1,0 +1,179 @@
+# CI/CD for hello-api (lab 07).
+#
+#   test ──▶ integration ──▶ image ──▶ deploy
+#   (every push and PR)      (main only) (main only, when DEPLOY_ENABLED=true)
+#
+# Deploy setup: labs/07-cicd-pipeline/README.md, step 6.
+name: hello-api
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/hello-api/**
+      - stacks/hello-api/**
+      - scripts/smoke-test.sh
+      - .github/workflows/hello-api.yml
+  pull_request:
+    paths:
+      - apps/hello-api/**
+      - stacks/hello-api/**
+      - scripts/smoke-test.sh
+      - .github/workflows/hello-api.yml
+  workflow_dispatch:
+
+# Least privilege: jobs that need more ask for it themselves.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older, still-running pipeline.
+concurrency:
+  group: hello-api-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/hello-api
+
+jobs:
+  test:
+    name: Lint and unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/hello-api
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: apps/hello-api/go.mod
+          cache-dependency-path: apps/hello-api/go.sum
+
+      - name: Check formatting
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Run gofmt on:"; echo "$unformatted"; exit 1
+          fi
+
+      - name: Vet and test
+        run: make test
+
+  integration:
+    name: Integration test (Compose stack)
+    needs: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stacks/hello-api
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Start app, Postgres, and Redis
+        run: |
+          cp .env.example .env
+          sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(openssl rand -hex 16)/" .env
+          docker compose up -d --build --wait --wait-timeout 120
+
+      - name: Smoke test
+        run: ../../scripts/smoke-test.sh http://localhost:8000 dev
+
+      - name: Show logs
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop
+        if: always()
+        run: docker compose down -v
+
+  image:
+    name: Build and push image
+    needs: integration
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # push to ghcr.io with GITHUB_TOKEN
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Compute image tag
+        id: vars
+        run: echo "tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: apps/hello-api
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: VERSION=${{ steps.vars.outputs.tag }}
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.vars.outputs.tag }}
+            ${{ env.IMAGE }}:main
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=hello-api
+          cache-to: type=gha,mode=max,scope=hello-api
+
+  deploy:
+    name: Deploy to VPS
+    needs: image
+    # Off until a VPS exists: set the repository variable DEPLOY_ENABLED=true.
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    # Never run two deploys at once, and never cancel one halfway.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      TAG: ${{ needs.image.outputs.tag }}
+      DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
+          USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Pinned host key: no StrictHostKeyChecking=no, so a fake server can't
+          # receive our deploy.
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host vps
+            HostName $HOST
+            Port $PORT
+            User $USER
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+          EOF
+
+      - name: Upload stack files
+        run: |
+          ssh vps 'mkdir -p ~/opsforge/stacks/hello-api'
+          scp stacks/hello-api/{compose.yaml,compose.traefik.yaml,compose.deploy.yaml,deploy.sh} \
+            vps:opsforge/stacks/hello-api/
+
+      - name: Deploy
+        run: ssh vps "~/opsforge/stacks/hello-api/deploy.sh '$TAG'"
+
+      - name: Smoke test the live site
+        run: scripts/smoke-test.sh "$DEPLOY_URL" "$TAG"

@@ -1,0 +1,6 @@
+# Override for servers: run the image CI pushed to GHCR instead of building (lab 07).
+# Usage (normally via deploy.sh):
+#   APP_VERSION=sha-1a2b3c4 docker compose -f compose.yaml -f compose.traefik.yaml -f compose.deploy.yaml up -d --no-build
+services:
+  app:
+    image: ghcr.io/0x48core/hello-api:${APP_VERSION:?set APP_VERSION to an image tag}
