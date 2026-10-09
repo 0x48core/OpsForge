@@ -1,0 +1,43 @@
+# Turn a fresh Ubuntu 24.04 server into the OpsForge server (lab 09).
+#   ansible-playbook site.yml                          # fake VPS (inventory/test)
+#   ansible-playbook -i inventory/production site.yml --ask-vault-pass
+# Safe to re-run: a second run should report changed=0.
+
+- name: Work out how to connect
+  hosts: all
+  gather_facts: false
+  tags: always
+  tasks:
+    # A fresh server only lets root in on port 22; a hardened one only lets the
+    # admin user in on ssh_port. Try a real login (an open port isn't enough:
+    # some port forwarders accept TCP even when nothing listens behind them).
+    - name: Try to log in as the admin user on the hardened port
+      ansible.builtin.command: >-
+        ssh -o BatchMode=yes -o ConnectTimeout=5
+        -p {{ ssh_public_port | default(ssh_port) }} {{ admin_user }}@{{ ansible_host }} true
+      delegate_to: localhost
+      register: hardened_login
+      changed_when: false
+      failed_when: false
+      check_mode: false   # read-only: must also run in --check, or detection is skipped
+
+    - name: Connect as the admin user, or bootstrap as root
+      ansible.builtin.set_fact:
+        ansible_port: "{{ (ssh_public_port | default(ssh_port)) if (hardened_login.rc | default(1)) == 0 else bootstrap_port }}"
+        ansible_user: "{{ admin_user if (hardened_login.rc | default(1)) == 0 else bootstrap_user }}"
+
+    - name: Show the connection in use
+      ansible.builtin.debug:
+        msg: "{{ ansible_user }}@{{ ansible_host }}:{{ ansible_port }} ({{ 'hardened' if (hardened_login.rc | default(1)) == 0 else 'fresh server' }})"
+
+- name: Configure the OpsForge server
+  hosts: all
+  become: true
+  roles:
+    - { role: common, tags: [common] }
+    - { role: users, tags: [users] }
+    - { role: firewall, tags: [firewall] }   # before ssh: open the new port first
+    - { role: ssh, tags: [ssh] }
+    - { role: fail2ban, tags: [fail2ban] }
+    - { role: docker, tags: [docker] }
+    - { role: opsforge, tags: [opsforge] }

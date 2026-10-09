@@ -10,7 +10,7 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.opsforge.localhost`)
+      - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN:-opsforge.localhost}`)
       - traefik.http.routers.whoami.entrypoints=websecure
     restart: unless-stopped
     # No ports: Traefik reaches it over the proxy network.

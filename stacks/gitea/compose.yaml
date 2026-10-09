@@ -9,8 +9,8 @@ services:
     image: gitea/gitea:1.25.5-rootless
     environment:
       # Gitea reads GITEA__<section>__<KEY> into app.ini on startup.
-      GITEA__server__DOMAIN: git.opsforge.localhost
-      GITEA__server__ROOT_URL: https://git.opsforge.localhost/
+      GITEA__server__DOMAIN: git.${DOMAIN:-opsforge.localhost}
+      GITEA__server__ROOT_URL: https://git.${DOMAIN:-opsforge.localhost}/
       GITEA__server__SSH_DOMAIN: localhost
       GITEA__server__SSH_PORT: "2222"
       GITEA__database__DB_TYPE: sqlite3
@@ -27,7 +27,7 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.gitea.rule=Host(`git.opsforge.localhost`)
+      - traefik.http.routers.gitea.rule=Host(`git.${DOMAIN:-opsforge.localhost}`)
       - traefik.http.routers.gitea.entrypoints=websecure
       - traefik.http.services.gitea.loadbalancer.server.port=3000
     restart: unless-stopped

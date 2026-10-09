@@ -1,0 +1,4 @@
+- name: Restart traefik
+  community.docker.docker_compose_v2:
+    project_src: "{{ opsforge_dir }}/stacks/traefik"
+    state: restarted

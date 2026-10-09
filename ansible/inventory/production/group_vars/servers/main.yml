@@ -1,0 +1,4 @@
+# Production settings (non-secret). Secrets go in vault.yml next to this file.
+domain: <your-domain.com>
+traefik_acme_email: <you@example.com>
+# deploy_ssh_pubkey: "ssh-ed25519 AAAA... github-actions-deploy"

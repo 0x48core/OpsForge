@@ -1,0 +1,139 @@
+# Prepares the server for the OpsForge stacks. App releases are NOT done here:
+# CI (lab 07) deploys hello-api with deploy.sh. Ansible = server, CI = releases.
+
+- name: Create the deploy user (runs deploys from CI)
+  ansible.builtin.user:
+    name: "{{ deploy_user }}"
+    shell: /bin/bash
+    groups: docker              # root-equivalent: see labs/07 knowledge.md
+    append: true
+    password: "!"
+
+- name: Install the CI deploy key
+  ansible.posix.authorized_key:
+    user: "{{ deploy_user }}"
+    key: "{{ deploy_ssh_pubkey }}"
+    exclusive: true
+  when: deploy_ssh_pubkey | length > 0
+
+- name: Create the stack directories
+  ansible.builtin.file:
+    path: "{{ opsforge_dir }}/stacks/{{ item }}"
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0750"
+  loop: [traefik, traefik/dynamic, traefik/secrets, traefik/certs, traefik/acme, hello-api]
+
+- name: Create the shared proxy network
+  community.docker.docker_network:
+    name: proxy
+
+# --- Traefik -------------------------------------------------------------------
+
+- name: Copy the Traefik stack from this repo
+  ansible.builtin.copy:
+    src: "{{ opsforge_stacks_src }}/traefik/{{ item }}"
+    dest: "{{ opsforge_dir }}/stacks/traefik/{{ item }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0640"
+  loop: [compose.yaml, dynamic/middlewares.yml]
+  notify: Restart traefik
+
+# Same static config as stacks/traefik/traefik.yml, plus Let's Encrypt when
+# traefik_acme_email is set: one source of truth, merged here.
+- name: Write traefik.yml
+  ansible.builtin.copy:
+    dest: "{{ opsforge_dir }}/stacks/traefik/traefik.yml"
+    content: "{{ traefik_static | to_nice_yaml(indent=2) }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0640"
+  vars:
+    traefik_base: "{{ lookup('ansible.builtin.file', opsforge_stacks_src + '/traefik/traefik.yml') | from_yaml }}"
+    traefik_acme:
+      entryPoints:
+        websecure:
+          http:
+            tls:
+              certResolver: letsencrypt
+      certificatesResolvers:
+        letsencrypt:
+          acme:
+            email: "{{ traefik_acme_email }}"
+            storage: /etc/traefik/acme/acme.json
+            httpChallenge:
+              entryPoint: web
+    traefik_static: "{{ traefik_base | combine(traefik_acme if traefik_acme_email else {}, recursive=true) }}"
+  notify: Restart traefik
+
+- name: Write the dashboard users file
+  ansible.builtin.copy:
+    dest: "{{ opsforge_dir }}/stacks/traefik/secrets/dashboard-users"
+    content: "{{ traefik_dashboard_users }}\n"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0600"
+  no_log: true
+
+- name: Write the Traefik server overrides
+  ansible.builtin.copy:
+    dest: "{{ opsforge_dir }}/stacks/traefik/{{ item.name }}"
+    content: "{{ item.content }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0640"
+  loop:
+    - name: .env
+      content: "DOMAIN={{ domain }}\n"
+    - name: compose.override.yaml   # picked up automatically by docker compose
+      content: |
+        # Managed by Ansible (roles/opsforge): local edits are overwritten.
+        # On a server Traefik listens on all interfaces, and keeps ACME certificates.
+        services:
+          traefik:
+            ports: !override
+              - "80:80"
+              - "443:443"
+            volumes:
+              - ./acme:/etc/traefik/acme
+  loop_control:
+    label: "{{ item.name }}"
+  notify: Restart traefik
+
+- name: Start Traefik
+  community.docker.docker_compose_v2:
+    project_src: "{{ opsforge_dir }}/stacks/traefik"
+    state: present
+
+# --- hello-api: files for deploy.sh; CI deploys the actual release ---------------
+
+- name: Copy the hello-api stack from this repo
+  ansible.builtin.copy:
+    src: "{{ opsforge_stacks_src }}/hello-api/{{ item.name }}"
+    dest: "{{ opsforge_dir }}/stacks/hello-api/{{ item.name }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { name: compose.yaml, mode: "0640" }
+    - { name: compose.traefik.yaml, mode: "0640" }
+    - { name: compose.deploy.yaml, mode: "0640" }
+    - { name: deploy.sh, mode: "0750" }
+    - { name: rollback.sh, mode: "0750" }
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Write the hello-api .env
+  ansible.builtin.copy:
+    dest: "{{ opsforge_dir }}/stacks/hello-api/.env"
+    content: |
+      DOMAIN={{ domain }}
+      POSTGRES_USER=hello
+      POSTGRES_PASSWORD={{ hello_api_postgres_password }}
+      POSTGRES_DB=hello
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: "0600"
+  no_log: true

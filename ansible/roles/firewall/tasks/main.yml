@@ -1,0 +1,32 @@
+- name: Install ufw
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Deny incoming and allow outgoing by default
+  community.general.ufw:
+    direction: "{{ item.direction }}"
+    default: "{{ item.policy }}"
+  loop:
+    - { direction: incoming, policy: deny }
+    - { direction: outgoing, policy: allow }
+
+# On a fresh server we are still connected through the initial SSH port:
+# keep it open until the ssh role has moved sshd and reconnected.
+- name: Keep the initial SSH port open while bootstrapping
+  community.general.ufw:
+    rule: allow
+    port: "{{ ssh_initial_port | string }}"
+    proto: tcp
+  when: ansible_user == bootstrap_user
+
+- name: Allow the hardened SSH port and web ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item | string }}"
+    proto: tcp
+  loop: "{{ [ssh_port] + firewall_allowed_tcp_ports }}"
+
+- name: Enable the firewall
+  community.general.ufw:
+    state: enabled

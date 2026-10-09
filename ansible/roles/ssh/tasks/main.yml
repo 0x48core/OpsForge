@@ -1,0 +1,49 @@
+- name: Install the SSH hardening config
+  ansible.builtin.template:
+    src: 00-hardening.conf.j2
+    dest: /etc/ssh/sshd_config.d/00-hardening.conf
+    mode: "0644"
+  notify: Restart sshd
+
+- name: Check the full sshd config is valid
+  ansible.builtin.command: sshd -t
+  changed_when: false
+
+# known_hosts stores keys per host AND port. Carry the trust we already have
+# for this server over to the new port, instead of disabling host key checks.
+- name: Read the server's SSH host key
+  ansible.builtin.slurp:
+    src: /etc/ssh/ssh_host_ed25519_key.pub
+  register: ssh_host_key
+
+- name: Trust the same host key on the hardened port
+  ansible.builtin.known_hosts:
+    name: "[{{ ansible_host }}]:{{ ssh_public_port | default(ssh_port) }}"
+    key: "[{{ ansible_host }}]:{{ ssh_public_port | default(ssh_port) }} {{ (ssh_host_key.content | b64decode).split()[:2] | join(' ') }}"
+  delegate_to: localhost
+  become: false
+
+# Restart now (not at the end of the play), then reconnect on the new port.
+- name: Apply the SSH changes now
+  ansible.builtin.meta: flush_handlers
+
+- name: Switch the connection to the hardened port and admin user
+  ansible.builtin.set_fact:
+    ansible_port: "{{ ssh_public_port | default(ssh_port) }}"
+    ansible_user: "{{ admin_user }}"
+  when: ansible_user == bootstrap_user
+
+- name: Drop the old SSH connection
+  ansible.builtin.meta: reset_connection
+
+- name: Reconnect
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Close the initial SSH port in the firewall
+  community.general.ufw:
+    rule: allow
+    port: "{{ ssh_initial_port | string }}"
+    proto: tcp
+    delete: true
+  when: ssh_initial_port != ssh_port

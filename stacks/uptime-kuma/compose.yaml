@@ -14,7 +14,7 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.uptime-kuma.rule=Host(`status.opsforge.localhost`)
+      - traefik.http.routers.uptime-kuma.rule=Host(`status.${DOMAIN:-opsforge.localhost}`)
       - traefik.http.routers.uptime-kuma.entrypoints=websecure
       - traefik.http.services.uptime-kuma.loadbalancer.server.port=3001
     restart: unless-stopped

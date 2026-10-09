@@ -15,7 +15,7 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.portainer.rule=Host(`portainer.opsforge.localhost`)
+      - traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN:-opsforge.localhost}`)
       - traefik.http.routers.portainer.entrypoints=websecure
       - traefik.http.services.portainer.loadbalancer.server.port=9000
     restart: unless-stopped

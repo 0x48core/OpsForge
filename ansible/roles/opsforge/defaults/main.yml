@@ -1,0 +1,2 @@
+opsforge_dir: "/home/{{ deploy_user }}/opsforge"
+opsforge_stacks_src: "{{ playbook_dir }}/../stacks"

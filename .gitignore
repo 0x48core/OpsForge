@@ -21,6 +21,10 @@ crash.log
 
 # Ansible
 *.retry
+# Real inventory and vault stay local (commit vault.yml only encrypted: git add -f)
+ansible/inventory/production/hosts.yml
+ansible/inventory/production/group_vars/servers/vault.yml
+ansible/collections/
 
 # Backups / dumps
 *.sql

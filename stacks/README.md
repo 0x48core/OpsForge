@@ -12,3 +12,5 @@ Docker Compose stacks, one folder per stack (`stacks/<name>/compose.yaml`, plus 
 | [portainer](portainer/) | Docker management UI (`portainer.`); read-write Docker socket | 06 |
 
 Web-facing stacks join the shared external `proxy` network (`docker network create proxy`) and are routed by Traefik labels.
+
+Router hostnames use `${DOMAIN:-opsforge.localhost}`: unset locally, set to your real domain on a server (written to each stack's `.env` by [Ansible](../ansible/), lab 09).
