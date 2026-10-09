@@ -1,0 +1,28 @@
+# Portainer CE: web UI for managing Docker (lab 06).
+# Prerequisites: the traefik stack and the proxy network.
+# Usage: docker compose up -d, then create the admin user within 5 minutes.
+name: portainer
+
+services:
+  portainer:
+    image: portainer/portainer-ce:2.45.2
+    volumes:
+      # Read-write socket: Portainer can do ANYTHING Docker can, which is
+      # root on the host. Never expose it publicly without strong auth.
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portainer.rule=Host(`portainer.opsforge.localhost`)
+      - traefik.http.routers.portainer.entrypoints=websecure
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+    restart: unless-stopped
+
+volumes:
+  portainer-data:
+
+networks:
+  proxy:
+    external: true

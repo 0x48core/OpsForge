@@ -31,7 +31,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 |---|---|---|
 | 04 | [Dockerize an app](labs/04-dockerize-app/) | 🟨 |
 | 05 | [Multi-service reverse proxy](labs/05-multi-service-proxy/) | 🟨 |
-| 06 | [Self-hosted tools](labs/06-self-hosted-tools/) | ⬜ |
+| 06 | [Self-hosted tools](labs/06-self-hosted-tools/) | 🟨 |
 
 ### Phase 3 — CI/CD
 | # | Lab | Status |
