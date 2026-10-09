@@ -1,0 +1,111 @@
+# hello-api: 2 replicas, rolling updates without downtime, probes, limits,
+# and a locked-down security context.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-api
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0      # never fewer than 2 ready pods during a rollout (lab 08)
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: hello-api
+  template:
+    metadata:
+      labels:
+        app: hello-api
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532       # distroless "nonroot"; numeric so Kubernetes can verify it
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: hello-api
+          image: ghcr.io/0x48core/hello-api:sha-adfc9cf
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: SHUTDOWN_DELAY  # drain while endpoints update (lab 08)
+              value: "5"
+            - name: POSTGRES_USER
+              valueFrom: { secretKeyRef: { name: hello-api-db, key: POSTGRES_USER } }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: hello-api-db, key: POSTGRES_PASSWORD } }
+            - name: POSTGRES_DB
+              valueFrom: { secretKeyRef: { name: hello-api-db, key: POSTGRES_DB } }
+            # $(VAR) uses the env vars defined above.
+            - name: DATABASE_URL
+              value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)?sslmode=disable
+            - name: REDIS_URL
+              value: redis://redis:6379/0
+          # Startup: give the app time to start. Liveness: restart if the process
+          # hangs. Readiness: send traffic only when Postgres and Redis work.
+          startupProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 1
+            failureThreshold: 30
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 5
+          resources:
+            requests: { cpu: 25m, memory: 16Mi }
+            limits: { memory: 64Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-api
+spec:
+  selector:
+    app: hello-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-api
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: api.k8s.opsforge.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-api
+                port:
+                  name: http
+---
+# Voluntary disruptions (node drain, cluster upgrade) keep at least one pod.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: hello-api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: hello-api

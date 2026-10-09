@@ -1,0 +1,30 @@
+# Argo CD Application (lab 12): keep the cluster in sync with this repo.
+# Usage: kubectl apply -f k8s/argocd/hello-api.yaml
+# Needs the Secret "hello-api-db" in namespace hello-api (not in git).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-api
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # deleting the app deletes its resources
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/0x48core/OpsForge.git
+    targetRevision: main
+    path: k8s/charts/hello-api
+    helm:
+      releaseName: hello-api
+      valueFiles:
+        - values.yaml
+        - values-k3d.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello-api
+  syncPolicy:
+    automated:
+      prune: true      # delete resources that were removed from git
+      selfHeal: true   # undo manual changes made with kubectl
+    syncOptions:
+      - CreateNamespace=true

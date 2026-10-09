@@ -1,0 +1,16 @@
+# A local K3s cluster in Docker (lab 12): 1 server (control plane) + 2 agents.
+# Usage: k3d cluster create --config k8s/cluster/k3d.yaml
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: opsforge
+servers: 1
+agents: 2
+image: rancher/k3s:v1.35.5-k3s1
+ports:
+  # K3s ships Traefik as its Ingress controller. Not 80/443: those belong to
+  # the Docker Traefik stack (lab 05), so both can run at once.
+  - port: 127.0.0.1:8081:80
+    nodeFilters: [loadbalancer]
+  - port: 127.0.0.1:8444:443
+    nodeFilters: [loadbalancer]

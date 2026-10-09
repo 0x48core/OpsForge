@@ -1,0 +1,42 @@
+# Default values. Override with -f my-values.yaml or --set key=value.
+
+image:
+  repository: ghcr.io/0x48core/hello-api
+  tag: ""                   # empty = Chart.appVersion
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+# Secret with POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB. Created outside
+# git (kubectl create secret …), never stored in this chart.
+existingSecret: hello-api-db
+
+shutdownDelaySeconds: 5     # drain on SIGTERM (lab 08)
+
+resources:
+  requests: { cpu: 25m, memory: 16Mi }
+  limits: { memory: 64Mi }
+
+ingress:
+  enabled: true
+  className: traefik
+  host: api.k8s.opsforge.localhost
+
+podDisruptionBudget:
+  minAvailable: 1
+
+postgres:
+  enabled: true             # false = point DATABASE_URL elsewhere via externalDatabaseHost
+  image: postgres:17-alpine
+  storage: 1Gi
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { memory: 256Mi }
+
+externalDatabaseHost: ""    # used when postgres.enabled is false
+
+redis:
+  image: redis:7.4-alpine
+  resources:
+    requests: { cpu: 25m, memory: 16Mi }
+    limits: { memory: 64Mi }

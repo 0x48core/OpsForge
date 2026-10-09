@@ -1,0 +1,5 @@
+# Settings for the local k3d cluster. Argo CD reads this from git (lab 12):
+# change a value here, commit, push, and the cluster follows.
+image:
+  tag: sha-adfc9cf
+replicaCount: 2
