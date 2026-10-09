@@ -43,7 +43,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | IP, ports, TCP vs UDP, DNS, HTTP(S), firewalls | [01](../labs/01-vps-hardening/), [02](../labs/02-nginx-ssl-reverse-proxy/), [05](../labs/05-multi-service-proxy/) | - [ ] Explain what happens when you type a URL and press Enter, down to TCP and TLS |
 | 2 | Subnets/CIDR, routing, NAT, load balancing, TLS and certificates, packet capture | [13](../labs/13-network-fundamentals/), [15](../labs/15-dns-deep-dive/), [16](../labs/16-wireguard-vpn/) | - [ ] Debug "can't connect" by layer: DNS, route, firewall, port, TLS, app |
-| 3 | Container and Kubernetes networking internals, VPNs, BGP basics, cloud networking (VPCs) | [14](../labs/14-linux-network-namespaces/), Phase 9 | - [ ] Draw how a packet reaches a pod in Kubernetes, rule by rule |
+| 3 | Container and Kubernetes networking internals, VPNs, BGP basics, cloud networking (VPCs) | [14](../labs/14-linux-network-namespaces/), [28](../labs/28-gcp-networking/), [35](../labs/35-k8s-networking/) | - [ ] Draw how a packet reaches a pod in Kubernetes, rule by rule |
 
 **Resources:** *Computer Networking: A Top-Down Approach* (Kurose & Ross) · [High Performance Browser Networking](https://hpbn.co/) (free) · [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/) · Julia Evans' networking zines · Wireshark.
 
@@ -63,7 +63,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Commit, branch, merge, PRs, `.gitignore`, never committing secrets | this repo: a branch and PR per lab | - [ ] Write commit messages and PRs others understand |
 | 2 | Rebase, conflicts, revert, bisect, tags and semantic versioning, code review | — | - [ ] Find a bad commit with `git bisect`; recover a "lost" commit with `reflog` |
-| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 11 | - [ ] Design a branching and release process for a team |
+| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 12 | - [ ] Design a branching and release process for a team |
 
 **Resources:** [Pro Git](https://git-scm.com/book/en/v2) (free) · [Conventional Commits](https://www.conventionalcommits.org/) · [trunkbaseddevelopment.com](https://trunkbaseddevelopment.com/).
 
@@ -73,7 +73,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Images, containers, volumes, ports, Compose | [04](../labs/04-dockerize-app/), [06](../labs/06-self-hosted-tools/) | - [ ] Containerize an app with its database from scratch |
 | 2 | Multi-stage, small and non-root images, layer caching, multi-arch, healthchecks, registries | [04](../labs/04-dockerize-app/), [07](../labs/07-cicd-pipeline/) | - [ ] Get an image under 30 MB that runs as non-root |
-| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), Phase 10 | - [ ] Build a container by hand with `unshare` |
+| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), [37](../labs/37-k8s-security/), Phase 11 | - [ ] Build a container by hand with `unshare` |
 
 **Resources:** [Docker docs](https://docs.docker.com/get-started/) · *Docker Deep Dive* (Nigel Poulton) · [What even is a container?](https://jvns.ca/blog/2016/10/10/what-even-is-a-container/).
 
@@ -83,7 +83,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Pipelines: test, build, push, deploy; secrets in CI | [07](../labs/07-cicd-pipeline/) | - [ ] Build a pipeline from an empty repo to a running deploy |
 | 2 | Zero-downtime deploys, rollback, immutable artifacts, GitOps | [08](../labs/08-zero-downtime-deploy/), [12](../labs/12-k3s-gitops/) | - [ ] Deploy under load with zero errors, and roll back in one command |
-| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | Phase 11 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
+| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | [27](../labs/27-gcp-project-structure/), [42](../labs/42-k8s-advanced-delivery/), Phase 12 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
 
 **Resources:** *Continuous Delivery* (Humble & Farley) · *Accelerate* (Forsgren, Humble, Kim) · [dora.dev](https://dora.dev/) · [GitHub Actions docs](https://docs.github.com/actions).
 
@@ -93,31 +93,34 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Declarative vs imperative, idempotency, Ansible playbooks | [09](../labs/09-ansible/) | - [ ] Rebuild a server from zero with one command |
 | 2 | Terraform: state, plan, providers, modules; secrets (Vault, ansible-vault) | [10](../labs/10-terraform/) | - [ ] Create and destroy a cloud environment from code, with remote state |
-| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | Phases 9–10 | - [ ] Write a Terraform module others reuse, with tests |
+| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | [27](../labs/27-gcp-project-structure/), Phase 11 | - [ ] Write a Terraform module others reuse, with tests |
 
 **Resources:** [Ansible docs](https://docs.ansible.com/) · *Terraform: Up & Running* (Yevgeniy Brikman) · [Terraform tutorials](https://developer.hashicorp.com/terraform/tutorials).
 
-### 8. Cloud (AWS first): *the biggest gap in the labs so far*
+### 8. Cloud: Google Cloud (GCP)
 
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
-| 1 | Regions and AZs, IAM (users, roles, policies), EC2, S3, VPC basics, billing alerts | Phase 9 | - [ ] Run a VM in a private subnet, reached only through a load balancer |
-| 2 | VPC design, ALB, auto-scaling groups, RDS, managed Kubernetes (EKS), CloudWatch, cost | Phase 9 | - [ ] Explain your monthly bill line by line, and cut it |
-| 3 | Multi-account setup, least-privilege IAM, disaster recovery across regions, FinOps | Phase 9 | - [ ] Design an architecture for a given budget and availability target |
+| 1 | Resource hierarchy, projects, billing budgets, IAM (roles, service accounts), `gcloud`, Compute Engine, Cloud Storage | [26](../labs/26-gcp-foundations/), [29](../labs/29-gcp-compute-and-load-balancing/) | - [ ] A budget alert exists before anything else; SSH to a VM with no public IP (IAP) |
+| 2 | Project structure as code, VPC and Cloud NAT, load balancing, instance groups, Artifact Registry, Cloud Run, Cloud SQL, Secret Manager, **Workload Identity Federation** | [27](../labs/27-gcp-project-structure/)–[30](../labs/30-gcp-cloud-run-and-cloud-sql/) | - [ ] CI deploys to GCP with no service account key anywhere |
+| 3 | GKE in production, Workload Identity, Cloud Logging/Monitoring, FinOps, multi-region design | [31](../labs/31-gke/), [32](../labs/32-gcp-operations-and-cost/) | - [ ] Explain the bill line by line, and design for a given budget and availability target |
 
-**Resources:** [AWS Skill Builder](https://skillbuilder.aws/) (free courses) · [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/) · Adrian Cantrill's courses · **AWS Solutions Architect Associate** certification.
+How the projects are laid out (one per environment, state, IAM, CI access): [ADR 0004](decisions/0004-gcp-project-structure.md).
 
-⚠️ Set a **billing alarm** before creating anything. Cloud mistakes cost real money.
+**Resources:** [Google Cloud Skills Boost](https://www.cloudskillsboost.google/) (hands-on labs) · [Google Cloud documentation](https://cloud.google.com/docs) · [Google Cloud Architecture Framework](https://cloud.google.com/architecture/framework) · [Terraform Google provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs) · **Associate Cloud Engineer**, then **Professional Cloud DevOps Engineer** certification.
 
-### 9. Kubernetes
+⚠️ Set a **budget alert** before creating anything, and `terraform destroy` dev after each lab. Cloud mistakes cost real money. The concepts (IAM, VPCs, managed services) carry over to AWS and Azure.
+
+### 9. Kubernetes: from basics to deep dive
 
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
-| 1 | Pods, Deployments, Services, Ingress, ConfigMaps, Secrets, probes | [12](../labs/12-k3s-gitops/) | - [ ] Deploy an app with a database, from YAML you write yourself |
-| 2 | Helm, GitOps, StatefulSets, PVCs, resources, autoscaling, debugging (`describe`, events) | [12](../labs/12-k3s-gitops/), [23](../labs/23-horizontal-scaling/) | - [ ] Fix a pod that's `CrashLoopBackOff`, `Pending`, and `ImagePullBackOff` |
-| 3 | RBAC, NetworkPolicies, cluster upgrades, operators, service mesh, multi-cluster | Phase 11 | - [ ] Upgrade a cluster without downtime; pass **CKA** |
+| 1 | Pods, Deployments, Services, namespaces, labels, kubectl fluency; ConfigMaps, Secrets, volumes, StatefulSets, Jobs | [12](../labs/12-k3s-gitops/), [33](../labs/33-k8s-core-objects/), [34](../labs/34-k8s-config-storage-workloads/) | - [ ] Deploy an app with a database from YAML you write yourself, without looking anything up |
+| 2 | Networking (Services, DNS, Ingress, Gateway API, NetworkPolicies), scheduling and resources, Helm, GitOps, troubleshooting | [35](../labs/35-k8s-networking/), [36](../labs/36-k8s-scheduling-and-resources/), [38](../labs/38-k8s-observability-and-troubleshooting/), [23](../labs/23-horizontal-scaling/) | - [ ] Fix `CrashLoopBackOff`, `Pending`, `ImagePullBackOff`, and `OOMKilled` pods in minutes; pass **CKAD** |
+| 3 | Security (RBAC, Pod Security, policy as code), control-plane internals, kubeadm, upgrades, etcd backup, GKE | [37](../labs/37-k8s-security/), [39](../labs/39-k8s-internals/), [40](../labs/40-k8s-cluster-lifecycle/), [31](../labs/31-gke/) | - [ ] Build a cluster with kubeadm, upgrade it, and restore etcd; pass **CKA** |
+| 4 | Operators and CRDs, admission control, progressive delivery, service mesh, multi-environment GitOps | [41](../labs/41-k8s-extending/), [42](../labs/42-k8s-advanced-delivery/) | - [ ] Write an operator in Go; canary with automatic rollback; pass **CKS** |
 
-**Resources:** [Kubernetes docs](https://kubernetes.io/docs/) · *Kubernetes Up & Running* · [Killercoda](https://killercoda.com/) (free browser labs) · [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) · **CKA**, then **CKS**.
+**Resources:** [Kubernetes docs](https://kubernetes.io/docs/) (also allowed during CKA/CKAD/CKS) · *Kubernetes Up & Running* · *Kubernetes in Action* (Marko Lukša) · [Killercoda](https://killercoda.com/) (free browser labs) · [killer.sh](https://killer.sh/) (exam simulator) · [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) · [The Kubebuilder Book](https://book.kubebuilder.io/) · *Programming Kubernetes* (Hausenblas & Schimanski).
 
 ### 10. Observability
 
@@ -125,7 +128,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Metrics vs logs vs traces, dashboards, basic alerts | [11](../labs/11-observability/) | - [ ] Build a dashboard that answers "is it healthy?" at a glance |
 | 2 | PromQL, LogQL, RED/USE, cardinality, alert design, SLOs | [11](../labs/11-observability/), [25](../labs/25-resilience-and-chaos/) | - [ ] Write alerts that fire on user-facing symptoms, with no noise |
-| 3 | **Distributed tracing (OpenTelemetry)**, profiling, observability at scale | Phase 11 | - [ ] Trace one slow request across services to its cause |
+| 3 | **Distributed tracing (OpenTelemetry)**, profiling, observability at scale | [38](../labs/38-k8s-observability-and-troubleshooting/), Phase 12 | - [ ] Trace one slow request across services to its cause |
 
 **Resources:** [Prometheus docs](https://prometheus.io/docs/) · [OpenTelemetry docs](https://opentelemetry.io/docs/) · *Observability Engineering* (Majors, Fong-Jones, Miranda) · [Google SRE books](https://sre.google/books/) (free).
 
@@ -134,8 +137,8 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
 | 1 | SSH keys, firewalls, least privilege, secrets out of git, updates | [01](../labs/01-vps-hardening/), [07](../labs/07-cicd-pipeline/) | - [ ] Explain every secret in this repo: where it lives, who can read it |
-| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), Phase 10 | - [ ] Make CI fail on critical vulnerabilities in your image |
-| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), threat modelling | Phase 10 | - [ ] Only signed images can run in your cluster |
+| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), [37](../labs/37-k8s-security/), Phase 11 | - [ ] Make CI fail on critical vulnerabilities in your image |
+| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), threat modelling | [37](../labs/37-k8s-security/), Phase 11 | - [ ] Only signed images can run in your cluster |
 
 **Resources:** [OWASP Top 10](https://owasp.org/www-project-top-ten/) · [SLSA](https://slsa.dev/) · [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks) · *Container Security* (Liz Rice).
 
@@ -155,7 +158,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Availability, redundancy, health checks, graceful shutdown | [04](../labs/04-dockerize-app/), [08](../labs/08-zero-downtime-deploy/) | - [ ] Explain why a deploy can cause errors and how to prevent it |
 | 2 | Load testing, capacity planning, horizontal scaling, caching, queues | [22](../labs/22-load-testing-capacity/)–[24](../labs/24-caching-and-databases/) | - [ ] Find your system's breaking point and its bottleneck |
-| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), Phase 11 | - [ ] Lead a (practice) incident and write a blameless postmortem |
+| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), Phase 12 | - [ ] Lead a (practice) incident and write a blameless postmortem |
 
 **Resources:** [Site Reliability Engineering + The SRE Workbook](https://sre.google/books/) (free) · *Release It!* (Michael Nygard) · [incident.io guide](https://incident.io/guide).
 
@@ -173,24 +176,23 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 
 ## Labs still to create (future phases)
 
-These fill the gaps above. They're listed here only, not as lab folders yet:
+Phases 9 (GCP, labs 26–32) and 10 (Kubernetes in depth, labs 33–42) now exist as lab stubs. Still listed here only:
 
 | Phase | Labs |
 |---|---|
-| **9 — Cloud (AWS)** | AWS account and IAM done right · VPC with public/private subnets · ALB + auto-scaling group · RDS + S3 · EKS (or ECS) · cost and FinOps |
-| **10 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · policy as code (Kyverno) · threat modelling one system |
-| **11 — SRE and delivery** | OpenTelemetry tracing · dev/staging/prod promotion · canary releases with Argo Rollouts · incident simulation and postmortem · Kubernetes RBAC, NetworkPolicies, cluster upgrade |
+| **11 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · supply-chain levels (SLSA) · threat modelling one system |
+| **12 — SRE and delivery** | OpenTelemetry tracing · dev/staging/prod promotion and feature flags · incident simulation and postmortem · DORA metrics for this repo |
 
 ---
 
-## Suggested path (about 12 months at 8–10 hours a week)
+## Suggested path (about 15 months at 8–10 hours a week)
 
 | Stage | Months | Focus | Labs | Milestone |
 |---|---|---|---|---|
 | **A. Foundations** | 1–3 | Linux, networking, Bash, Git, containers | 01–06, 13, 17 | All Level 1 checkpoints |
 | **B. Automation** | 4–6 | CI/CD, IaC, observability, backups, a real VPS online | 03, 07–11 | The VPS rebuilt from code; alerts on your phone |
-| **C. Platforms** | 7–9 | Kubernetes, cloud (AWS), scaling | 12, 22–24, Phase 9 | **AWS SAA** certification |
-| **D. Depth** | 10–12 | OS internals, security, reliability, SRE | 14–16, 18–21, 25, Phases 10–11 | **CKA** certification; a public portfolio |
+| **C. Platforms** | 7–10 | Kubernetes basics, Google Cloud, scaling | 12, 22–24, 26–31, 33–36 | **Associate Cloud Engineer**; **CKAD** |
+| **D. Depth** | 11–15 | Kubernetes deep dive, OS internals, security, reliability, SRE | 14–16, 18–21, 25, 32, 37–42 | **CKA**, then **CKS**; a public portfolio |
 
 ### A weekly rhythm
 
@@ -207,10 +209,12 @@ Small and steady beats long and rare: five sessions of 1.5 hours teach more than
 
 | Certification | When | Why |
 |---|---|---|
-| AWS Solutions Architect Associate | After Stage C | The most asked-for cloud certification |
-| CKA (Certified Kubernetes Administrator) | Stage D | Hands-on exam, highly respected |
 | HashiCorp Terraform Associate | Any time after lab 10 | Quick, validates IaC basics |
-| CKS (Kubernetes Security) | After CKA | Security depth |
+| Google Associate Cloud Engineer | After labs 26–31 | The entry GCP certification: hands-on cloud operations |
+| CKAD (Certified Kubernetes Application Developer) | After labs 33–36 | Hands-on, about using Kubernetes; a good first Kubernetes exam |
+| CKA (Certified Kubernetes Administrator) | After labs 37–40 | Hands-on, about running clusters; highly respected |
+| CKS (Kubernetes Security) | After CKA (required) | Security depth |
+| Google Professional Cloud DevOps Engineer | After Stage D | Senior-level: SRE practices on GCP |
 
 Certificates open doors; the labs and your write-ups are what convince people once the door is open.
 

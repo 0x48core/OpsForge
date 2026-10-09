@@ -80,8 +80,37 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 
 Phases 6–8 deepen the foundations: each lab lists what it **builds on**, and all of them run locally (fake VPS, Docker, or k3d).
 
+### Phase 9 — Google Cloud (GCP)
+| # | Lab | Status |
+|---|---|---|
+| 26 | [GCP foundations: account, billing, IAM](labs/26-gcp-foundations/) | ⬜ |
+| 27 | [GCP project structure with Terraform](labs/27-gcp-project-structure/) | ⬜ |
+| 28 | [GCP networking: VPC, firewall, private access](labs/28-gcp-networking/) | ⬜ |
+| 29 | [Compute Engine, instance groups, load balancing](labs/29-gcp-compute-and-load-balancing/) | ⬜ |
+| 30 | [Cloud Run, Artifact Registry, Cloud SQL](labs/30-gcp-cloud-run-and-cloud-sql/) | ⬜ |
+| 31 | [GKE: Google Kubernetes Engine](labs/31-gke/) | ⬜ |
+| 32 | [Cloud operations and FinOps](labs/32-gcp-operations-and-cost/) | ⬜ |
+
+How the GCP projects are structured: [ADR 0004](docs/decisions/0004-gcp-project-structure.md).
+
+### Phase 10 — Kubernetes in depth
+| # | Lab | Status |
+|---|---|---|
+| 33 | [Kubernetes core objects and kubectl](labs/33-k8s-core-objects/) | ⬜ |
+| 34 | [Config, storage, and workload types](labs/34-k8s-config-storage-workloads/) | ⬜ |
+| 35 | [Kubernetes networking](labs/35-k8s-networking/) | ⬜ |
+| 36 | [Scheduling, resources, and disruptions](labs/36-k8s-scheduling-and-resources/) | ⬜ |
+| 37 | [Kubernetes security](labs/37-k8s-security/) | ⬜ |
+| 38 | [Observability and troubleshooting](labs/38-k8s-observability-and-troubleshooting/) | ⬜ |
+| 39 | [Kubernetes internals: the control plane](labs/39-k8s-internals/) | ⬜ |
+| 40 | [Cluster lifecycle: upgrades, backup, HA](labs/40-k8s-cluster-lifecycle/) | ⬜ |
+| 41 | [Extending Kubernetes: CRDs and operators](labs/41-k8s-extending/) | ⬜ |
+| 42 | [Advanced delivery: canary, multi-env, service mesh](labs/42-k8s-advanced-delivery/) | ⬜ |
+
+Labs 33–38 run free on k3d; 39–40 need real VMs (GCE, lab 29); 31 and 42 use GKE.
+
 ### Beyond
-New labs get the next number (26, 27, …) and a new phase heading if needed: message queues, cloud-managed services, service mesh, whatever comes next.
+New labs get the next number (43, 44, …) and a new phase heading if needed: DevSecOps and SRE (planned in the [learning roadmap](docs/learning-roadmap.md)), message queues, whatever comes next.
 
 ## Repository layout
 
