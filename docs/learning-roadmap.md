@@ -63,7 +63,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Commit, branch, merge, PRs, `.gitignore`, never committing secrets | this repo: a branch and PR per lab | - [ ] Write commit messages and PRs others understand |
 | 2 | Rebase, conflicts, revert, bisect, tags and semantic versioning, code review | — | - [ ] Find a bad commit with `git bisect`; recover a "lost" commit with `reflog` |
-| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 12 | - [ ] Design a branching and release process for a team |
+| 3 | Trunk-based development, release strategy, monorepos, branch protection | Phase 13 | - [ ] Design a branching and release process for a team |
 
 **Resources:** [Pro Git](https://git-scm.com/book/en/v2) (free) · [Conventional Commits](https://www.conventionalcommits.org/) · [trunkbaseddevelopment.com](https://trunkbaseddevelopment.com/).
 
@@ -73,7 +73,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Images, containers, volumes, ports, Compose | [04](../labs/04-dockerize-app/), [06](../labs/06-self-hosted-tools/) | - [ ] Containerize an app with its database from scratch |
 | 2 | Multi-stage, small and non-root images, layer caching, multi-arch, healthchecks, registries | [04](../labs/04-dockerize-app/), [07](../labs/07-cicd-pipeline/) | - [ ] Get an image under 30 MB that runs as non-root |
-| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), [37](../labs/37-k8s-security/), Phase 11 | - [ ] Build a container by hand with `unshare` |
+| 3 | What a container *is* (namespaces, cgroups, overlayfs), runtimes (containerd), image security | [18](../labs/18-containers-from-scratch/), [37](../labs/37-k8s-security/), Phase 12 | - [ ] Build a container by hand with `unshare` |
 
 **Resources:** [Docker docs](https://docs.docker.com/get-started/) · *Docker Deep Dive* (Nigel Poulton) · [What even is a container?](https://jvns.ca/blog/2016/10/10/what-even-is-a-container/).
 
@@ -83,7 +83,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Pipelines: test, build, push, deploy; secrets in CI | [07](../labs/07-cicd-pipeline/) | - [ ] Build a pipeline from an empty repo to a running deploy |
 | 2 | Zero-downtime deploys, rollback, immutable artifacts, GitOps | [08](../labs/08-zero-downtime-deploy/), [12](../labs/12-k3s-gitops/) | - [ ] Deploy under load with zero errors, and roll back in one command |
-| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | [27](../labs/27-gcp-project-structure/), [42](../labs/42-k8s-advanced-delivery/), Phase 12 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
+| 3 | Multiple environments and promotion, canary and feature flags, DORA metrics | [27](../labs/27-gcp-project-structure/), [42](../labs/42-k8s-advanced-delivery/), Phase 13 | - [ ] Measure your deployment frequency, lead time, change failure rate, recovery time |
 
 **Resources:** *Continuous Delivery* (Humble & Farley) · *Accelerate* (Forsgren, Humble, Kim) · [dora.dev](https://dora.dev/) · [GitHub Actions docs](https://docs.github.com/actions).
 
@@ -93,7 +93,7 @@ Levels 1–3 are the goal of this roadmap. Level 4 comes from years of running r
 |---|---|---|---|
 | 1 | Declarative vs imperative, idempotency, Ansible playbooks | [09](../labs/09-ansible/) | - [ ] Rebuild a server from zero with one command |
 | 2 | Terraform: state, plan, providers, modules; secrets (Vault, ansible-vault) | [10](../labs/10-terraform/) | - [ ] Create and destroy a cloud environment from code, with remote state |
-| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | [27](../labs/27-gcp-project-structure/), Phase 11 | - [ ] Write a Terraform module others reuse, with tests |
+| 3 | Reusable modules, testing IaC, policy as code, drift detection at team scale | [27](../labs/27-gcp-project-structure/), Phase 12 | - [ ] Write a Terraform module others reuse, with tests |
 
 **Resources:** [Ansible docs](https://docs.ansible.com/) · *Terraform: Up & Running* (Yevgeniy Brikman) · [Terraform tutorials](https://developer.hashicorp.com/terraform/tutorials).
 
@@ -118,9 +118,22 @@ How the projects are laid out (one per environment, state, IAM, CI access): [ADR
 | 1 | Pods, Deployments, Services, namespaces, labels, kubectl fluency; ConfigMaps, Secrets, volumes, StatefulSets, Jobs | [12](../labs/12-k3s-gitops/), [33](../labs/33-k8s-core-objects/), [34](../labs/34-k8s-config-storage-workloads/) | - [ ] Deploy an app with a database from YAML you write yourself, without looking anything up |
 | 2 | Networking (Services, DNS, Ingress, Gateway API, NetworkPolicies), scheduling and resources, Helm, GitOps, troubleshooting | [35](../labs/35-k8s-networking/), [36](../labs/36-k8s-scheduling-and-resources/), [38](../labs/38-k8s-observability-and-troubleshooting/), [23](../labs/23-horizontal-scaling/) | - [ ] Fix `CrashLoopBackOff`, `Pending`, `ImagePullBackOff`, and `OOMKilled` pods in minutes; pass **CKAD** |
 | 3 | Security (RBAC, Pod Security, policy as code), control-plane internals, kubeadm, upgrades, etcd backup, GKE | [37](../labs/37-k8s-security/), [39](../labs/39-k8s-internals/), [40](../labs/40-k8s-cluster-lifecycle/), [31](../labs/31-gke/) | - [ ] Build a cluster with kubeadm, upgrade it, and restore etcd; pass **CKA** |
-| 4 | Operators and CRDs, admission control, progressive delivery, service mesh, multi-environment GitOps | [41](../labs/41-k8s-extending/), [42](../labs/42-k8s-advanced-delivery/) | - [ ] Write an operator in Go; canary with automatic rollback; pass **CKS** |
+| 4 | Operators and CRDs, admission control, progressive delivery, multi-environment GitOps | [41](../labs/41-k8s-extending/), [42](../labs/42-k8s-advanced-delivery/) | - [ ] Write an operator in Go; canary with automatic rollback; pass **CKS** |
 
 **Resources:** [Kubernetes docs](https://kubernetes.io/docs/) (also allowed during CKA/CKAD/CKS) · *Kubernetes Up & Running* · *Kubernetes in Action* (Marko Lukša) · [Killercoda](https://killercoda.com/) (free browser labs) · [killer.sh](https://killer.sh/) (exam simulator) · [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) · [The Kubebuilder Book](https://book.kubebuilder.io/) · *Programming Kubernetes* (Hausenblas & Schimanski).
+
+#### Service mesh (Phase 11)
+
+A mesh moves encryption, retries, traffic control, and per-call telemetry out of the app code and into proxies (or the kernel). Learn it after Kubernetes networking, security, and observability ([35](../labs/35-k8s-networking/), [37](../labs/37-k8s-security/), [38](../labs/38-k8s-observability-and-troubleshooting/)).
+
+| Level | Learn | Practice | Checkpoint |
+|---|---|---|---|
+| 1 | Why meshes exist, sidecar pattern, L4 vs L7, Envoy listeners/routes/clusters, xDS | [43](../labs/43-why-a-service-mesh/), [44](../labs/44-envoy-by-hand/) | - [ ] Route and retry traffic with an Envoy config you wrote yourself |
+| 2 | Linkerd and Istio basics: injection, automatic mTLS, golden metrics, Gateway API, ingress gateway | [45](../labs/45-linkerd/), [46](../labs/46-istio-basics/) | - [ ] Show encrypted pod-to-pod traffic and per-route success rates with zero code changes |
+| 3 | Traffic management (canary, mirroring, fault injection, circuit breaking), zero-trust (SPIFFE, AuthorizationPolicy), tracing | [47](../labs/47-mesh-traffic-management/)–[49](../labs/49-mesh-observability-and-tracing/) | - [ ] A 90/10 canary with default-deny policies, and one slow request traced across services |
+| 4 | Sidecarless meshes (Istio ambient, Cilium), overhead, control-plane upgrades, multi-cluster, when *not* to use a mesh | [50](../labs/50-mesh-ambient-and-production/) | - [ ] A measured comparison and a written recommendation; pass **ICA** |
+
+**Resources:** [Istio docs](https://istio.io/latest/docs/) · [Linkerd docs](https://linkerd.io/2/overview/) · [Envoy docs](https://www.envoyproxy.io/docs) · *Istio in Action* (Posta, Maloku) · [Solo.io Academy](https://academy.solo.io/) and [Buoyant Service Mesh Academy](https://buoyant.io/service-mesh-academy) (free) · [Isovalent labs](https://isovalent.com/resource-library/labs/) for Cilium (free) · [Gateway API (GAMMA)](https://gateway-api.sigs.k8s.io/mesh/).
 
 ### 10. Observability
 
@@ -128,7 +141,7 @@ How the projects are laid out (one per environment, state, IAM, CI access): [ADR
 |---|---|---|---|
 | 1 | Metrics vs logs vs traces, dashboards, basic alerts | [11](../labs/11-observability/) | - [ ] Build a dashboard that answers "is it healthy?" at a glance |
 | 2 | PromQL, LogQL, RED/USE, cardinality, alert design, SLOs | [11](../labs/11-observability/), [25](../labs/25-resilience-and-chaos/) | - [ ] Write alerts that fire on user-facing symptoms, with no noise |
-| 3 | **Distributed tracing (OpenTelemetry)**, profiling, observability at scale | [38](../labs/38-k8s-observability-and-troubleshooting/), Phase 12 | - [ ] Trace one slow request across services to its cause |
+| 3 | **Distributed tracing (OpenTelemetry)**, profiling, observability at scale | [38](../labs/38-k8s-observability-and-troubleshooting/), [49](../labs/49-mesh-observability-and-tracing/) | - [ ] Trace one slow request across services to its cause |
 
 **Resources:** [Prometheus docs](https://prometheus.io/docs/) · [OpenTelemetry docs](https://opentelemetry.io/docs/) · *Observability Engineering* (Majors, Fong-Jones, Miranda) · [Google SRE books](https://sre.google/books/) (free).
 
@@ -137,8 +150,8 @@ How the projects are laid out (one per environment, state, IAM, CI access): [ADR
 | Level | Learn | Practice | Checkpoint |
 |---|---|---|---|
 | 1 | SSH keys, firewalls, least privilege, secrets out of git, updates | [01](../labs/01-vps-hardening/), [07](../labs/07-cicd-pipeline/) | - [ ] Explain every secret in this repo: where it lives, who can read it |
-| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), [37](../labs/37-k8s-security/), Phase 11 | - [ ] Make CI fail on critical vulnerabilities in your image |
-| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), threat modelling | [37](../labs/37-k8s-security/), Phase 11 | - [ ] Only signed images can run in your cluster |
+| 2 | TLS/PKI, vulnerability scanning (Trivy), secrets managers (Vault), OWASP Top 10 | [21](../labs/21-linux-security-hardening/), [37](../labs/37-k8s-security/), Phase 12 | - [ ] Make CI fail on critical vulnerabilities in your image |
+| 3 | Supply chain (SBOM, cosign signatures, SLSA), policy as code (OPA/Kyverno), zero-trust service identity, threat modelling | [37](../labs/37-k8s-security/), [48](../labs/48-mesh-security-zero-trust/), Phase 12 | - [ ] Only signed images can run in your cluster |
 
 **Resources:** [OWASP Top 10](https://owasp.org/www-project-top-ten/) · [SLSA](https://slsa.dev/) · [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks) · *Container Security* (Liz Rice).
 
@@ -158,7 +171,7 @@ How the projects are laid out (one per environment, state, IAM, CI access): [ADR
 |---|---|---|---|
 | 1 | Availability, redundancy, health checks, graceful shutdown | [04](../labs/04-dockerize-app/), [08](../labs/08-zero-downtime-deploy/) | - [ ] Explain why a deploy can cause errors and how to prevent it |
 | 2 | Load testing, capacity planning, horizontal scaling, caching, queues | [22](../labs/22-load-testing-capacity/)–[24](../labs/24-caching-and-databases/) | - [ ] Find your system's breaking point and its bottleneck |
-| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), Phase 12 | - [ ] Lead a (practice) incident and write a blameless postmortem |
+| 3 | SLOs and error budgets, chaos engineering, **incident response and postmortems** | [25](../labs/25-resilience-and-chaos/), [47](../labs/47-mesh-traffic-management/), Phase 13 | - [ ] Lead a (practice) incident and write a blameless postmortem |
 
 **Resources:** [Site Reliability Engineering + The SRE Workbook](https://sre.google/books/) (free) · *Release It!* (Michael Nygard) · [incident.io guide](https://incident.io/guide).
 
@@ -176,23 +189,24 @@ How the projects are laid out (one per environment, state, IAM, CI access): [ADR
 
 ## Labs still to create (future phases)
 
-Phases 9 (GCP, labs 26–32) and 10 (Kubernetes in depth, labs 33–42) now exist as lab stubs. Still listed here only:
+Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), and 11 (service mesh, labs 43–50) exist as lab stubs. Still listed here only:
 
 | Phase | Labs |
 |---|---|
-| **11 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · supply-chain levels (SLSA) · threat modelling one system |
-| **12 — SRE and delivery** | OpenTelemetry tracing · dev/staging/prod promotion and feature flags · incident simulation and postmortem · DORA metrics for this repo |
+| **12 — DevSecOps** | Image scanning and SBOMs in CI · signing images with cosign · Vault for secrets · supply-chain levels (SLSA) · threat modelling one system |
+| **13 — SRE and delivery** | dev/staging/prod promotion · incident simulation and postmortem · DORA metrics for this repo |
 
 ---
 
-## Suggested path (about 15 months at 8–10 hours a week)
+## Suggested path (about 18 months at 8–10 hours a week)
 
 | Stage | Months | Focus | Labs | Milestone |
 |---|---|---|---|---|
 | **A. Foundations** | 1–3 | Linux, networking, Bash, Git, containers | 01–06, 13, 17 | All Level 1 checkpoints |
 | **B. Automation** | 4–6 | CI/CD, IaC, observability, backups, a real VPS online | 03, 07–11 | The VPS rebuilt from code; alerts on your phone |
 | **C. Platforms** | 7–10 | Kubernetes basics, Google Cloud, scaling | 12, 22–24, 26–31, 33–36 | **Associate Cloud Engineer**; **CKAD** |
-| **D. Depth** | 11–15 | Kubernetes deep dive, OS internals, security, reliability, SRE | 14–16, 18–21, 25, 32, 37–42 | **CKA**, then **CKS**; a public portfolio |
+| **D. Depth** | 11–15 | Kubernetes deep dive, OS internals, security, reliability | 14–16, 18–21, 25, 32, 37–42 | **CKA**, then **CKS**; a public portfolio |
+| **E. Service mesh** | 16–18 | Envoy, Linkerd, Istio in depth, sidecarless meshes | 43–50 | **ICA** (Istio Certified Associate); a measured mesh comparison in your portfolio |
 
 ### A weekly rhythm
 
@@ -215,6 +229,8 @@ Small and steady beats long and rare: five sessions of 1.5 hours teach more than
 | CKA (Certified Kubernetes Administrator) | After labs 37–40 | Hands-on, about running clusters; highly respected |
 | CKS (Kubernetes Security) | After CKA (required) | Security depth |
 | Google Professional Cloud DevOps Engineer | After Stage D | Senior-level: SRE practices on GCP |
+| ICA (Istio Certified Associate) | After labs 46–49 | Hands-on Istio: traffic, security, observability |
+| CCA (Cilium Certified Associate) | Optional, after lab 50 | eBPF networking and Cilium's mesh |
 
 Certificates open doors; the labs and your write-ups are what convince people once the door is open.
 

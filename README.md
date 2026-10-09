@@ -15,7 +15,7 @@ OpsForge has two layers:
 
 Rule of thumb: if I'd want to run it again next month, it belongs in an infrastructure folder, and the lab links to it. See [docs/conventions.md](docs/conventions.md).
 
-**Learning path:** [docs/learning-roadmap.md](docs/learning-roadmap.md) is the curriculum behind the labs: 14 skill domains in levels, with checkpoints, resources, certifications, and a 12-month plan.
+**Learning path:** [docs/learning-roadmap.md](docs/learning-roadmap.md) is the curriculum behind the labs: 14 skill domains (plus a service mesh track) in levels, with checkpoints, resources, certifications, and an 18-month plan.
 
 ## Roadmap
 
@@ -105,12 +105,26 @@ How the GCP projects are structured: [ADR 0004](docs/decisions/0004-gcp-project-
 | 39 | [Kubernetes internals: the control plane](labs/39-k8s-internals/) | ⬜ |
 | 40 | [Cluster lifecycle: upgrades, backup, HA](labs/40-k8s-cluster-lifecycle/) | ⬜ |
 | 41 | [Extending Kubernetes: CRDs and operators](labs/41-k8s-extending/) | ⬜ |
-| 42 | [Advanced delivery: canary, multi-env, service mesh](labs/42-k8s-advanced-delivery/) | ⬜ |
+| 42 | [Advanced delivery: canary and multiple environments](labs/42-k8s-advanced-delivery/) | ⬜ |
 
 Labs 33–38 run free on k3d; 39–40 need real VMs (GCE, lab 29); 31 and 42 use GKE.
 
+### Phase 11 — Service mesh
+| # | Lab | Status |
+|---|---|---|
+| 43 | [Why a service mesh?](labs/43-why-a-service-mesh/) | ⬜ |
+| 44 | [Envoy by hand](labs/44-envoy-by-hand/) | ⬜ |
+| 45 | [Linkerd: a mesh in 15 minutes](labs/45-linkerd/) | ⬜ |
+| 46 | [Istio basics](labs/46-istio-basics/) | ⬜ |
+| 47 | [Traffic management](labs/47-mesh-traffic-management/) | ⬜ |
+| 48 | [Zero-trust security with a mesh](labs/48-mesh-security-zero-trust/) | ⬜ |
+| 49 | [Mesh observability and distributed tracing](labs/49-mesh-observability-and-tracing/) | ⬜ |
+| 50 | [Sidecarless meshes and running in production](labs/50-mesh-ambient-and-production/) | ⬜ |
+
+Demo app: `frontend` → `hello-api` + `quotes` (v1/v2), all on k3d. Learn the concepts with Linkerd, go deep with Istio, then compare sidecarless options (Istio ambient, Cilium).
+
 ### Beyond
-New labs get the next number (43, 44, …) and a new phase heading if needed: DevSecOps and SRE (planned in the [learning roadmap](docs/learning-roadmap.md)), message queues, whatever comes next.
+New labs get the next number (51, 52, …) and a new phase heading if needed: DevSecOps and SRE (planned in the [learning roadmap](docs/learning-roadmap.md)), message queues, whatever comes next.
 
 ## Repository layout
 
