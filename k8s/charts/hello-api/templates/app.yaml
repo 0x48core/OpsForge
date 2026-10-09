@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "hello-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "hello-api.selector" (dict "root" . "component" "app") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "hello-api.labels" . | nindent 8 }}
+        {{- include "hello-api.selector" (dict "root" . "component" "app") | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: hello-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: SHUTDOWN_DELAY
+              value: {{ .Values.shutdownDelaySeconds | quote }}
+            {{- range $key := list "POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.existingSecret }}
+                  key: {{ $key }}
+            {{- end }}
+            - name: DATABASE_URL
+              value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "hello-api.dbHost" . }}:5432/$(POSTGRES_DB)?sslmode=disable
+            - name: REDIS_URL
+              value: redis://{{ .Release.Name }}-redis:6379/0
+          startupProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 1
+            failureThreshold: 30
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "hello-api.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "hello-api.selector" (dict "root" . "component" "app") | nindent 4 }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+{{- with .Values.podDisruptionBudget }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $.Release.Name }}
+  labels:
+    {{- include "hello-api.labels" $ | nindent 4 }}
+spec:
+  minAvailable: {{ .minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "hello-api.selector" (dict "root" $ "component" "app") | nindent 6 }}
+{{- end }}

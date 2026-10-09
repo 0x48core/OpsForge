@@ -1,0 +1,6 @@
+apiVersion: v2
+name: hello-api
+description: hello-api with PostgreSQL and Redis (OpsForge lab 12)
+type: application
+version: 0.1.0          # the chart's own version: bump when templates change
+appVersion: sha-adfc9cf # the default image tag

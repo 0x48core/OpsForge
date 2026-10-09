@@ -1,0 +1,11 @@
+# hello-api with plain Kubernetes manifests (lab 12, part 1).
+# Usage: kubectl apply -k k8s/manifests/hello-api
+# Needs the Secret "hello-api-db" first (see labs/12-k3s-gitops/README.md).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: hello-api
+resources:
+  - namespace.yaml
+  - postgres.yaml
+  - redis.yaml
+  - app.yaml

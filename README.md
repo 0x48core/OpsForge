@@ -49,7 +49,7 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 | # | Lab | Status |
 |---|---|---|
 | 11 | [Observability stack](labs/11-observability/) | 🟨 |
-| 12 | [K3s, Helm & GitOps](labs/12-k3s-gitops/) | ⬜ |
+| 12 | [K3s, Helm & GitOps](labs/12-k3s-gitops/) | 🟨 |
 
 ### Beyond
 New labs get the next number (13, 14, …) and a new phase heading if needed — security, cloud, databases, whatever comes next.

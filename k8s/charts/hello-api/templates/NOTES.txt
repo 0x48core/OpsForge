@@ -1,0 +1,6 @@
+hello-api {{ .Values.image.tag | default .Chart.AppVersion }} is deploying as release "{{ .Release.Name }}" in namespace {{ .Release.Namespace }}.
+
+  kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ .Release.Name }}
+{{- if .Values.ingress.enabled }}
+  curl -H 'Host: {{ .Values.ingress.host }}' http://127.0.0.1:8081/ready
+{{- end }}
