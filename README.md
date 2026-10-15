@@ -64,9 +64,9 @@ Status: ⬜ todo · 🟨 in progress · ✅ done
 ### Phase 7 — Linux & OS internals
 | # | Lab | Status |
 |---|---|---|
-| 17 | [Processes, signals, and systemd](labs/17-processes-and-systemd/) | ⬜ |
+| 17 | [Processes, signals, and systemd](labs/17-processes-and-systemd/) | 🟨 |
 | 18 | [Containers from scratch](labs/18-containers-from-scratch/) | ⬜ |
-| 19 | [Storage and filesystems](labs/19-storage-and-filesystems/) | ⬜ |
+| 19 | [Storage and filesystems](labs/19-storage-and-filesystems/) | 🟨 |
 | 20 | [Performance troubleshooting](labs/20-performance-troubleshooting/) | ⬜ |
 | 21 | [Linux security hardening](labs/21-linux-security-hardening/) | ⬜ |
 
