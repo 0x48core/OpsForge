@@ -203,7 +203,7 @@ Phases 9 (GCP, labs 26–32), 10 (Kubernetes in depth, labs 33–42), 11 (servic
 
 | Stage | Months | Focus | Labs | Milestone |
 |---|---|---|---|---|
-| **A. Foundations** | 1–3 | Linux, networking, Bash, Git, containers | 01–06, 13, 17 | All Level 1 checkpoints |
+| **A. Foundations** | 1–3 | Linux, networking, Bash, Git, containers | [00](../labs/00-fundamentals/), 01–06, 13, 17 | All Level 1 checkpoints |
 | **B. Automation** | 4–6 | CI/CD, IaC, observability, backups, a real VPS online | 03, 07–11 | The VPS rebuilt from code; alerts on your phone |
 | **C. Platforms** | 7–10 | Kubernetes basics, Google Cloud, scaling | 12, 22–24, 26–31, 33–36 | **Associate Cloud Engineer**; **CKAD** |
 | **D. Depth** | 11–15 | Kubernetes deep dive, OS internals, security, reliability | 14–16, 18–21, 25, 32, 37–42 | **CKA**, then **CKS**; a public portfolio |
