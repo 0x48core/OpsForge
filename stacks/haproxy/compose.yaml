@@ -1,0 +1,53 @@
+# HAProxy in front of three whoami backends, plus an "api" pool (lab 60).
+# Usage: ./gen-cert.sh && docker compose up -d
+name: haproxy
+
+services:
+  haproxy:
+    image: haproxy:3.2-alpine
+    volumes:
+      # Mount the directory, not the single file: editors and `sed -i` replace
+      # the file (new inode), and a single-file bind mount keeps the old one.
+      - ./:/usr/local/etc/haproxy:ro
+    ports:
+      # Bound to localhost only: Docker-published ports bypass ufw (see lab 01).
+      - "127.0.0.1:8080:80"     # HTTP (redirects to HTTPS)
+      - "127.0.0.1:8443:443"    # HTTPS, TLS terminated by HAProxy
+      - "127.0.0.1:8404:8404"   # stats page + Prometheus metrics
+      - "127.0.0.1:9999:9999"   # runtime API (admin, never expose publicly)
+      - "127.0.0.1:6379:6379"   # Redis through HAProxy in TCP mode
+    depends_on:
+      - web1
+      - web2
+      - web3
+      - api1
+      - api2
+      - redis1
+      - redis2
+    restart: unless-stopped
+
+  # Three identical "web" servers. whoami prints its hostname, so you can
+  # see which one answered, and POST /health changes its health status.
+  web1:
+    image: traefik/whoami:v1.11.0
+    hostname: web1
+  web2:
+    image: traefik/whoami:v1.11.0
+    hostname: web2
+  web3:
+    image: traefik/whoami:v1.11.0
+    hostname: web3
+
+  # A second pool, reached by path-based routing (/api/...).
+  api1:
+    image: traefik/whoami:v1.11.0
+    hostname: api1
+  api2:
+    image: traefik/whoami:v1.11.0
+    hostname: api2
+
+  # Layer 4 demo: two independent Redis servers behind a TCP listener.
+  redis1:
+    image: redis:7.4-alpine
+  redis2:
+    image: redis:7.4-alpine

@@ -139,8 +139,13 @@ Demo app: `frontend` → `hello-api` + `quotes` (v1/v2), all on k3d. Learn the c
 
 Each data service is run with Docker Compose first, then on k3d with its operator, through the same checklist: deploy, HA, backup + restore, monitoring, upgrades, security. Run one at a time: Kafka and MongoDB clusters need a few GB of RAM each.
 
+### Extra — Load balancing
+| # | Lab | Status |
+|---|---|---|
+| 60 | [HAProxy load balancing](labs/60-haproxy/) | 🟨 |
+
 ### Beyond
-New labs get the next number (60, 61, …) and a new phase heading if needed: DevSecOps and SRE (phases 13–14, planned in the [learning roadmap](docs/learning-roadmap.md)), or whatever comes next.
+New labs get the next number (61, 62, …) and a new phase heading if needed: DevSecOps and SRE (phases 13–14, planned in the [learning roadmap](docs/learning-roadmap.md)), or whatever comes next.
 
 ## Repository layout
 
